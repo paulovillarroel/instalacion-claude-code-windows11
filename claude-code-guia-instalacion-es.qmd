@@ -2,16 +2,13 @@
 title: "Guía de Instalación de Claude Code para Windows 11: Configuración con WSL2"
 format: 
   html:
+    lang: es
     toc: true
     toc-depth: 3
     code-fold: false
     code-copy: true
-    highlight-style: github
     embed-resources: true
     self-contained: true
-  pdf:
-    toc: true
-    number-sections: true
 editor: visual
 ---
 
