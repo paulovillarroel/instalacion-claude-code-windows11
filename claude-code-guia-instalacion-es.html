@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Guía de Instalación de Claude Code para Windows 11: Configuración con WSL2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="claude-code-guia-instalacion-es_files/libs/clipboard/clipboard.min.js"></script>
+<script src="claude-code-guia-instalacion-es_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="claude-code-guia-instalacion-es_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="claude-code-guia-instalacion-es_files/libs/quarto-html/popper.min.js"></script>
+<script src="claude-code-guia-instalacion-es_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="claude-code-guia-instalacion-es_files/libs/quarto-html/anchor.min.js"></script>
+<link href="claude-code-guia-instalacion-es_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="claude-code-guia-instalacion-es_files/libs/quarto-html/quarto-syntax-highlighting-234273d1456647dabc34a594ac50e507.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="claude-code-guia-instalacion-es_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="claude-code-guia-instalacion-es_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="claude-code-guia-instalacion-es_files/libs/bootstrap/bootstrap-8d3bffc2aa61ab21cafe0bd246d8a9bc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#requisitos-del-sistema-y-prerrequisitos" id="toc-requisitos-del-sistema-y-prerrequisitos" class="nav-link" data-scroll-target="#requisitos-del-sistema-y-prerrequisitos">Requisitos del sistema y prerrequisitos</a>
+  <ul class="collapse">
+  <li><a href="#entendiendo-por-qué-claude-code-necesita-linux-en-windows" id="toc-entendiendo-por-qué-claude-code-necesita-linux-en-windows" class="nav-link" data-scroll-target="#entendiendo-por-qué-claude-code-necesita-linux-en-windows">Entendiendo por qué Claude Code necesita Linux en Windows</a></li>
+  <li><a href="#requisitos-de-versión-de-windows-11" id="toc-requisitos-de-versión-de-windows-11" class="nav-link" data-scroll-target="#requisitos-de-versión-de-windows-11">Requisitos de versión de Windows 11</a></li>
+  <li><a href="#requisitos-de-hardware" id="toc-requisitos-de-hardware" class="nav-link" data-scroll-target="#requisitos-de-hardware">Requisitos de hardware</a></li>
+  <li><a href="#desglose-de-componentes-de-software" id="toc-desglose-de-componentes-de-software" class="nav-link" data-scroll-target="#desglose-de-componentes-de-software">Desglose de componentes de software</a></li>
+  <li><a href="#opciones-de-emulador-de-terminal" id="toc-opciones-de-emulador-de-terminal" class="nav-link" data-scroll-target="#opciones-de-emulador-de-terminal">Opciones de emulador de terminal</a></li>
+  <li><a href="#opcional-pero-recomendado-git" id="toc-opcional-pero-recomendado-git" class="nav-link" data-scroll-target="#opcional-pero-recomendado-git">Opcional pero recomendado: Git</a></li>
+  <li><a href="#verificando-tu-conexión-a-internet" id="toc-verificando-tu-conexión-a-internet" class="nav-link" data-scroll-target="#verificando-tu-conexión-a-internet">Verificando tu conexión a internet</a></li>
+  <li><a href="#preparando-tu-mentalidad" id="toc-preparando-tu-mentalidad" class="nav-link" data-scroll-target="#preparando-tu-mentalidad">Preparando tu mentalidad</a></li>
+  </ul></li>
+  <li><a href="#proceso-completo-de-instalación" id="toc-proceso-completo-de-instalación" class="nav-link" data-scroll-target="#proceso-completo-de-instalación">Proceso completo de instalación</a>
+  <ul class="collapse">
+  <li><a href="#fase-1-instalando-wsl2-subsistema-de-windows-para-linux" id="toc-fase-1-instalando-wsl2-subsistema-de-windows-para-linux" class="nav-link" data-scroll-target="#fase-1-instalando-wsl2-subsistema-de-windows-para-linux">Fase 1: Instalando WSL2 (Subsistema de Windows para Linux)</a></li>
+  <li><a href="#fase-2-configurando-tu-entorno-linux" id="toc-fase-2-configurando-tu-entorno-linux" class="nav-link" data-scroll-target="#fase-2-configurando-tu-entorno-linux">Fase 2: Configurando tu entorno Linux</a></li>
+  <li><a href="#fase-3-actualizando-y-preparando-el-sistema-linux" id="toc-fase-3-actualizando-y-preparando-el-sistema-linux" class="nav-link" data-scroll-target="#fase-3-actualizando-y-preparando-el-sistema-linux">Fase 3: Actualizando y preparando el sistema Linux</a></li>
+  <li><a href="#fase-4-instalando-node.js-y-npm" id="toc-fase-4-instalando-node.js-y-npm" class="nav-link" data-scroll-target="#fase-4-instalando-node.js-y-npm">Fase 4: Instalando Node.js y npm</a></li>
+  <li><a href="#fase-5-configurando-npm-para-instalaciones-de-usuario" id="toc-fase-5-configurando-npm-para-instalaciones-de-usuario" class="nav-link" data-scroll-target="#fase-5-configurando-npm-para-instalaciones-de-usuario">Fase 5: Configurando npm para instalaciones de usuario</a></li>
+  </ul></li>
+  <li><a href="#instalando-claude-code-mismo" id="toc-instalando-claude-code-mismo" class="nav-link" data-scroll-target="#instalando-claude-code-mismo">Instalando Claude Code mismo</a>
+  <ul class="collapse">
+  <li><a href="#entendiendo-el-proceso-de-instalación-de-npm" id="toc-entendiendo-el-proceso-de-instalación-de-npm" class="nav-link" data-scroll-target="#entendiendo-el-proceso-de-instalación-de-npm">Entendiendo el proceso de instalación de npm</a></li>
+  <li><a href="#ejecutando-el-comando-de-instalación" id="toc-ejecutando-el-comando-de-instalación" class="nav-link" data-scroll-target="#ejecutando-el-comando-de-instalación">Ejecutando el comando de instalación</a></li>
+  <li><a href="#entendiendo-lo-que-se-acaba-de-instalar" id="toc-entendiendo-lo-que-se-acaba-de-instalar" class="nav-link" data-scroll-target="#entendiendo-lo-que-se-acaba-de-instalar">Entendiendo lo que se acaba de instalar</a></li>
+  <li><a href="#verificando-la-instalación" id="toc-verificando-la-instalación" class="nav-link" data-scroll-target="#verificando-la-instalación">Verificando la instalación</a></li>
+  <li><a href="#primera-ejecución-y-autenticación" id="toc-primera-ejecución-y-autenticación" class="nav-link" data-scroll-target="#primera-ejecución-y-autenticación">Primera ejecución y autenticación</a></li>
+  <li><a href="#entendiendo-las-opciones-de-autenticación" id="toc-entendiendo-las-opciones-de-autenticación" class="nav-link" data-scroll-target="#entendiendo-las-opciones-de-autenticación">Entendiendo las opciones de autenticación</a></li>
+  <li><a href="#completando-el-proceso-de-autenticación" id="toc-completando-el-proceso-de-autenticación" class="nav-link" data-scroll-target="#completando-el-proceso-de-autenticación">Completando el proceso de autenticación</a></li>
+  <li><a href="#solucionando-problemas-de-autenticación" id="toc-solucionando-problemas-de-autenticación" class="nav-link" data-scroll-target="#solucionando-problemas-de-autenticación">Solucionando problemas de autenticación</a></li>
+  </ul></li>
+  <li><a href="#configuración-y-verificación" id="toc-configuración-y-verificación" class="nav-link" data-scroll-target="#configuración-y-verificación">Configuración y verificación</a>
+  <ul class="collapse">
+  <li><a href="#entendiendo-el-sistema-de-configuración-de-claude-code" id="toc-entendiendo-el-sistema-de-configuración-de-claude-code" class="nav-link" data-scroll-target="#entendiendo-el-sistema-de-configuración-de-claude-code">Entendiendo el sistema de configuración de Claude Code</a></li>
+  <li><a href="#configurando-permisos-y-límites" id="toc-configurando-permisos-y-límites" class="nav-link" data-scroll-target="#configurando-permisos-y-límites">Configurando permisos y límites</a></li>
+  <li><a href="#configurando-compatibilidad-de-terminal" id="toc-configurando-compatibilidad-de-terminal" class="nav-link" data-scroll-target="#configurando-compatibilidad-de-terminal">Configurando compatibilidad de terminal</a></li>
+  <li><a href="#probando-funcionalidad-principal" id="toc-probando-funcionalidad-principal" class="nav-link" data-scroll-target="#probando-funcionalidad-principal">Probando funcionalidad principal</a></li>
+  <li><a href="#probando-integración-del-sistema-de-archivos-de-windows" id="toc-probando-integración-del-sistema-de-archivos-de-windows" class="nav-link" data-scroll-target="#probando-integración-del-sistema-de-archivos-de-windows">Probando integración del sistema de archivos de Windows</a></li>
+  <li><a href="#verificando-integración-con-git" id="toc-verificando-integración-con-git" class="nav-link" data-scroll-target="#verificando-integración-con-git">Verificando integración con Git</a></li>
+  <li><a href="#personalizando-el-comportamiento-de-claude-code" id="toc-personalizando-el-comportamiento-de-claude-code" class="nav-link" data-scroll-target="#personalizando-el-comportamiento-de-claude-code">Personalizando el comportamiento de Claude Code</a></li>
+  <li><a href="#creando-tu-primera-interacción-real" id="toc-creando-tu-primera-interacción-real" class="nav-link" data-scroll-target="#creando-tu-primera-interacción-real">Creando tu primera interacción real</a></li>
+  <li><a href="#guardando-y-respaldando-tu-configuración" id="toc-guardando-y-respaldando-tu-configuración" class="nav-link" data-scroll-target="#guardando-y-respaldando-tu-configuración">Guardando y respaldando tu configuración</a></li>
+  </ul></li>
+  <li><a href="#problemas-comunes-de-solución-de-problemas" id="toc-problemas-comunes-de-solución-de-problemas" class="nav-link" data-scroll-target="#problemas-comunes-de-solución-de-problemas">Problemas comunes de solución de problemas</a></li>
+  <li><a href="#rendimiento-y-mejores-prácticas" id="toc-rendimiento-y-mejores-prácticas" class="nav-link" data-scroll-target="#rendimiento-y-mejores-prácticas">Rendimiento y mejores prácticas</a></li>
+  <li><a href="#tutorial-creando-tu-primer-proyecto-hello-world-con-claude-code" id="toc-tutorial-creando-tu-primer-proyecto-hello-world-con-claude-code" class="nav-link" data-scroll-target="#tutorial-creando-tu-primer-proyecto-hello-world-con-claude-code">Tutorial: Creando tu Primer Proyecto “Hello World” con Claude Code</a>
+  <ul class="collapse">
+  <li><a href="#configurando-tu-espacio-de-trabajo-del-proyecto" id="toc-configurando-tu-espacio-de-trabajo-del-proyecto" class="nav-link" data-scroll-target="#configurando-tu-espacio-de-trabajo-del-proyecto">Configurando tu espacio de trabajo del proyecto</a></li>
+  <li><a href="#teniendo-tu-primera-conversación-con-claude-code" id="toc-teniendo-tu-primera-conversación-con-claude-code" class="nav-link" data-scroll-target="#teniendo-tu-primera-conversación-con-claude-code">Teniendo tu primera conversación con Claude Code</a></li>
+  <li><a href="#entendiendo-la-estructura-del-proyecto" id="toc-entendiendo-la-estructura-del-proyecto" class="nav-link" data-scroll-target="#entendiendo-la-estructura-del-proyecto">Entendiendo la estructura del proyecto</a></li>
+  <li><a href="#explorando-los-poderes-explicativos-de-claude-code" id="toc-explorando-los-poderes-explicativos-de-claude-code" class="nav-link" data-scroll-target="#explorando-los-poderes-explicativos-de-claude-code">Explorando los poderes explicativos de Claude Code</a></li>
+  <li><a href="#construyendo-y-ejecutando-el-proyecto" id="toc-construyendo-y-ejecutando-el-proyecto" class="nav-link" data-scroll-target="#construyendo-y-ejecutando-el-proyecto">Construyendo y ejecutando el proyecto</a></li>
+  <li><a href="#iterando-y-mejorando" id="toc-iterando-y-mejorando" class="nav-link" data-scroll-target="#iterando-y-mejorando">Iterando y mejorando</a></li>
+  <li><a href="#aprendiendo-a-través-de-exploración" id="toc-aprendiendo-a-través-de-exploración" class="nav-link" data-scroll-target="#aprendiendo-a-través-de-exploración">Aprendiendo a través de exploración</a></li>
+  <li><a href="#creando-la-alternativa-vb.net" id="toc-creando-la-alternativa-vb.net" class="nav-link" data-scroll-target="#creando-la-alternativa-vb.net">Creando la alternativa VB.NET</a></li>
+  <li><a href="#mejores-prácticas-para-trabajar-con-claude-code" id="toc-mejores-prácticas-para-trabajar-con-claude-code" class="nav-link" data-scroll-target="#mejores-prácticas-para-trabajar-con-claude-code">Mejores prácticas para trabajar con Claude Code</a></li>
+  <li><a href="#cerrando-tu-sesión" id="toc-cerrando-tu-sesión" class="nav-link" data-scroll-target="#cerrando-tu-sesión">Cerrando tu sesión</a></li>
+  </ul></li>
+  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión">Conclusión</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="claude-code-guia-instalacion-es.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Guía de Instalación de Claude Code para Windows 11: Configuración con WSL2</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level2">
+<h2 class="anchored" data-anchor-id="introducción">Introducción</h2>
+<p>Claude Code es el asistente de codificación oficial con IA de Anthropic que se ejecuta en tu terminal, pero <strong>requiere el Subsistema de Windows para Linux (WSL2)</strong> para funcionar en Windows 11 - no puede ejecutarse nativamente en Windows. Esta herramienta basada en terminal se integra directamente con tu entorno de desarrollo para asistir con la edición de código, depuración, pruebas, flujos de trabajo de git y comprensión de proyectos mediante comandos en lenguaje natural.</p>
+</section>
+<section id="requisitos-del-sistema-y-prerrequisitos" class="level2">
+<h2 class="anchored" data-anchor-id="requisitos-del-sistema-y-prerrequisitos">Requisitos del sistema y prerrequisitos</h2>
+<p>Antes de instalar Claude Code en Windows 11, necesitarás configurar un entorno Linux a través de WSL2. La herramienta requiere <strong>Node.js 18+</strong> (se recomienda LTS), <strong>npm 10+</strong>, y <strong>WSL2 con Ubuntu 20.04+</strong> o Debian 10+. Se recomienda Windows Terminal o un emulador de terminal equivalente para la mejor experiencia. Git también es recomendado para la funcionalidad de control de versiones.</p>
+<p>Antes de sumergirnos en la instalación, entendamos qué necesita Claude Code para ejecutarse correctamente en tu sistema Windows 11. Piensa en estos requisitos como ingredientes para una receta - faltar incluso uno puede evitar que el plato final resulte bien. Explicaré no solo lo que necesitas, sino por qué cada componente importa y cómo verificar si ya lo tienes.</p>
+<section id="entendiendo-por-qué-claude-code-necesita-linux-en-windows" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-por-qué-claude-code-necesita-linux-en-windows">Entendiendo por qué Claude Code necesita Linux en Windows</h3>
+<p>Claude Code está construido como una herramienta de línea de comandos diseñada para sistemas operativos similares a Unix (Linux y macOS). Aunque Windows es un excelente sistema operativo, maneja ciertos aspectos técnicos de manera diferente que Linux - cosas como permisos de archivos, gestión de procesos y llamadas del sistema. En lugar de crear una versión separada para Windows, Anthropic eligió aprovechar el Subsistema de Windows para Linux (WSL2) de Microsoft, que te permite ejecutar un entorno Linux real dentro de Windows. Este enfoque asegura que Claude Code funcione exactamente de la misma manera en todas las plataformas y obtenga todas las mismas actualizaciones y características.</p>
+</section>
+<section id="requisitos-de-versión-de-windows-11" class="level3">
+<h3 class="anchored" data-anchor-id="requisitos-de-versión-de-windows-11">Requisitos de versión de Windows 11</h3>
+<p>Necesitarás Windows 11 versión 21H2 o posterior. Para verificar tu versión, presiona la tecla Windows + R para abrir el diálogo Ejecutar, escribe <code>winver</code>, y presiona Enter. Aparecerá una ventana mostrando tu versión de Windows. Busca algo como “Versión 22H2 (OS Build 22621.2428)” - mientras diga 21H2 o superior (como 22H2, 23H2), estás listo. Si tienes una versión anterior, necesitarás actualizar Windows primero yendo a Configuración &gt; Windows Update e instalando cualquier actualización disponible.</p>
+<p>La razón por la que se requiere la versión 21H2 o posterior es que Microsoft mejoró significativamente la integración de WSL2 en estas versiones, incluyendo mejor rendimiento del sistema de archivos y soporte para GPU. Aunque WSL2 técnicamente funciona en versiones anteriores de Windows 11, tendrás una experiencia mucho más fluida con las versiones más recientes.</p>
+</section>
+<section id="requisitos-de-hardware" class="level3">
+<h3 class="anchored" data-anchor-id="requisitos-de-hardware">Requisitos de hardware</h3>
+<p>WSL2 requiere soporte de virtualización de tu CPU, que virtualmente todos los procesadores modernos tienen, pero necesita estar habilitado. Tu sistema necesita al menos 4GB de RAM, aunque se recomienda fuertemente 8GB o más para trabajo de desarrollo cómodo. Cuando ejecutas Claude Code junto con tu editor de código, navegador y otras herramientas de desarrollo, el uso de memoria se suma rápidamente. También necesitarás aproximadamente 2-4GB de espacio libre en disco para la instalación de WSL2 y Claude Code mismo, más espacio para tus archivos de proyecto.</p>
+<p>Para verificar si la virtualización está habilitada en tu sistema, abre el Administrador de tareas (Ctrl + Shift + Esc), haz clic en la pestaña Rendimiento, selecciona CPU en el lado izquierdo, y busca “Virtualización: Habilitada” en el lado derecho. Si dice “Deshabilitada”, necesitarás habilitarla en la configuración BIOS/UEFI de tu computadora - los pasos exactos varían por fabricante, pero típicamente involucran presionar F2, F10, o Delete durante el arranque y buscar opciones como “Intel VT-x”, “AMD-V”, o “Tecnología de Virtualización”.</p>
+</section>
+<section id="desglose-de-componentes-de-software" class="level3">
+<h3 class="anchored" data-anchor-id="desglose-de-componentes-de-software">Desglose de componentes de software</h3>
+<p>Permíteme explicar cada componente de software requerido y por qué es necesario. Primero, WSL2 (Subsistema de Windows para Linux 2) es la tecnología de Microsoft para ejecutar Linux junto con Windows. El “2” es importante - WSL2 usa tecnología real del kernel de Linux y es mucho más rápido que el WSL original. No está instalado por defecto en Windows 11, pero Microsoft hace que sea fácil agregarlo.</p>
+<p>Node.js es un runtime de JavaScript que te permite ejecutar código JavaScript fuera de un navegador web. Claude Code está construido con JavaScript/TypeScript y se distribuye a través de npm (Administrador de Paquetes de Node), que viene incluido con Node.js. Piensa en Node.js como el motor que alimenta Claude Code, mientras que npm es como el servicio de entrega que lo instala. Necesitas Node.js versión 18 o superior porque Claude Code usa características modernas de JavaScript que no estaban disponibles en versiones anteriores. Se recomiendan las versiones LTS (Soporte a Largo Plazo) porque reciben actualizaciones de seguridad por más tiempo y son más estables.</p>
+<p>Ubuntu 20.04+ o Debian 10+ son distribuciones de Linux - piensa en ellas como diferentes “sabores” de Linux, como Windows tiene ediciones Home y Pro. Se recomienda Ubuntu para principiantes porque es amigable para el usuario y tiene documentación extensa. Los números (20.04, 10) se refieren a números de versión - necesitas estas versiones mínimas porque incluyen bibliotecas del sistema necesarias y administradores de paquetes de los que Claude Code depende.</p>
+</section>
+<section id="opciones-de-emulador-de-terminal" class="level3">
+<h3 class="anchored" data-anchor-id="opciones-de-emulador-de-terminal">Opciones de emulador de terminal</h3>
+<p>Aunque Windows 11 viene con Windows Terminal preinstalado (un terminal moderno y rico en características), podrías ya tener otras opciones como el Símbolo del sistema tradicional o PowerShell. Para la mejor experiencia con Claude Code, se recomienda altamente Windows Terminal porque maneja correctamente caracteres especiales, colores y Unicode que Claude Code usa para su interfaz. También hace que sea fácil tener múltiples pestañas y cambiar entre entornos de Windows y Linux.</p>
+<p>Si no ves Windows Terminal en tu sistema, puedes instalarlo gratis desde Microsoft Store. Solo abre la aplicación Microsoft Store, busca “Windows Terminal”, y haz clic en Instalar. Otras alternativas compatibles incluyen ConEmu, Hyper, o incluso los terminales integrados en VS Code u otros entornos de desarrollo, aunque estos podrían requerir configuración adicional.</p>
+</section>
+<section id="opcional-pero-recomendado-git" class="level3">
+<h3 class="anchored" data-anchor-id="opcional-pero-recomendado-git">Opcional pero recomendado: Git</h3>
+<p>Aunque Git no es estrictamente requerido para ejecutar Claude Code, es altamente recomendado si estás haciendo cualquier desarrollo de software. Git es un sistema de control de versiones que rastrea cambios en tu código a lo largo del tiempo, y Claude Code tiene características integradas para ayudar con flujos de trabajo de Git como crear commits, cambiar ramas y revisar cambios. Si planeas usar estas características, Git necesita estar instalado dentro de tu entorno WSL2 (no solo en Windows).</p>
+<p>Puedes verificar si Git ya está instalado abriendo un terminal y escribiendo <code>git --version</code>. Si no está instalado, no te preocupes - cubriremos cómo instalarlo durante el proceso de configuración. Muchos desarrolladores ya tienen Git instalado en Windows, pero recuerda que Claude Code ejecuta en Linux, así que necesita la versión Linux de Git.</p>
+</section>
+<section id="verificando-tu-conexión-a-internet" class="level3">
+<h3 class="anchored" data-anchor-id="verificando-tu-conexión-a-internet">Verificando tu conexión a internet</h3>
+<p>Necesitarás una conexión a internet estable durante la instalación para descargar varios componentes: WSL2 y Ubuntu (aproximadamente 500MB), Node.js (aproximadamente 30MB), Claude Code y sus dependencias (aproximadamente 50MB), y actualizaciones del sistema (varía, pero típicamente 100-200MB). La descarga total es usualmente menos de 1GB, pero tener una conexión confiable previene interrupciones frustrantes durante la configuración.</p>
+<p>Adicionalmente, Claude Code requiere acceso a internet durante el uso para comunicarse con los servidores de IA de Anthropic. Mientras puedes trabajar en archivos locales sin conexión, las características de asistencia de IA necesitan una conexión activa. Si estás detrás de un firewall corporativo o proxy, podrías necesitar configuración adicional - consulta con tu departamento de TI si estás en un entorno corporativo.</p>
+</section>
+<section id="preparando-tu-mentalidad" class="level3">
+<h3 class="anchored" data-anchor-id="preparando-tu-mentalidad">Preparando tu mentalidad</h3>
+<p>Un “prerrequisito” final que vale la pena mencionar es paciencia y disposición para aprender algunos conceptos básicos de Linux. Si nunca has usado una línea de comandos o Linux antes, algunas partes podrían sentirse poco familiares al principio. ¡Eso es completamente normal! La línea de comandos podría parecer intimidante comparada con hacer clic en botones en una interfaz gráfica, pero es realmente bastante lógica una vez que entiendes los patrones. Piénsalo como aprender a manejar transmisión manual después de solo conocer automática - hay una curva de aprendizaje, pero obtienes mucho más control y entendimiento de lo que está pasando bajo el capó.</p>
+</section>
+</section>
+<section id="proceso-completo-de-instalación" class="level2">
+<h2 class="anchored" data-anchor-id="proceso-completo-de-instalación">Proceso completo de instalación</h2>
+<p>La instalación involucra cinco fases distintas que deben completarse en orden. Piensa en esto como construir una casa - necesitas los cimientos (WSL2) antes de poder agregar la estructura (Node.js) y finalmente los toques finales (Claude Code mismo).</p>
+<section id="fase-1-instalando-wsl2-subsistema-de-windows-para-linux" class="level3">
+<h3 class="anchored" data-anchor-id="fase-1-instalando-wsl2-subsistema-de-windows-para-linux">Fase 1: Instalando WSL2 (Subsistema de Windows para Linux)</h3>
+<p>Para abrir PowerShell como Administrador en Windows 11, tienes varias opciones. El método más directo es hacer clic derecho en el botón Inicio (el ícono de Windows en tu barra de tareas) y seleccionar “Terminal de Windows (Admin)” o “PowerShell (Admin)” del menú que aparece. Alternativamente, puedes presionar la tecla Windows en tu teclado, escribir “powershell”, y cuando veas “Windows PowerShell” aparecer en los resultados de búsqueda, hacer clic derecho y seleccionar “Ejecutar como administrador”. También puedes usar el atajo de teclado Windows+X seguido de presionar A. Cuando se solicite por Control de Cuentas de Usuario preguntando “¿Quieres permitir que esta aplicación haga cambios en tu dispositivo?”, haz clic en “Sí”.</p>
+<p>Una vez que PowerShell se abra con privilegios de administrador, verás “Administrador: Windows PowerShell” en la barra de título. El prompt típicamente mostrará algo como <code>PS C:\Windows\system32&gt;</code>. Ahora ejecuta el siguiente comando:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este comando hace varias cosas automáticamente: habilita las características requeridas de Windows (Plataforma de Máquina Virtual y Subsistema de Windows para Linux), descarga e instala la actualización del kernel WSL2, establece WSL2 como la versión predeterminada, e instala Ubuntu como la distribución Linux predeterminada. El proceso mostrará barras de progreso y mensajes de estado. Típicamente toma 5-10 minutos dependiendo de tu velocidad de internet.</p>
+<p>Después de que la instalación se complete, verás un mensaje diciendo “La operación solicitada es exitosa. Los cambios no serán efectivos hasta que el sistema sea reiniciado.” Reinicia tu computadora haciendo clic en Inicio, luego el botón de encendido, y seleccionando “Reiniciar”. Este reinicio es crucial - WSL2 no funcionará correctamente sin él.</p>
+</section>
+<section id="fase-2-configurando-tu-entorno-linux" class="level3">
+<h3 class="anchored" data-anchor-id="fase-2-configurando-tu-entorno-linux">Fase 2: Configurando tu entorno Linux</h3>
+<p>Después de que tu computadora se reinicie, necesitas lanzar Ubuntu por primera vez. Puedes hacer esto de tres maneras: haz clic en el botón Inicio y escribe “Ubuntu”, luego haz clic en la aplicación Ubuntu que aparece; o abre Windows Terminal y haz clic en la flecha desplegable junto al botón de nueva pestaña y selecciona “Ubuntu”; o abre cualquier terminal y escribe <code>wsl</code>.</p>
+<p>La primera vez que Ubuntu se lance, tomará un minuto o dos para completar la instalación. Verás mensajes como “Instalando, esto puede tomar algunos minutos…” seguido de “¡Instalación exitosa!” Luego se te pedirá crear un nombre de usuario y contraseña de Unix. Este es un paso importante que muchos usuarios nuevos encuentran confuso. El nombre de usuario que crees aquí es solo para tu entorno Linux - no necesita coincidir con tu nombre de usuario de Windows. Por ejemplo, si tu nombre de usuario de Windows es “JuanPerez”, podrías usar “juan” o “jperez” o cualquier otro nombre de usuario válido de Linux. Escribe tu nombre de usuario elegido y presiona Enter.</p>
+<p>Después, se te pedirá ingresar una contraseña. Aquí hay un detalle crítico: cuando escribas tu contraseña, nada aparecerá en pantalla - sin asteriscos, sin puntos, nada. Esta es una característica de seguridad en terminales de Linux. Solo escribe tu contraseña cuidadosamente y presiona Enter. Se te pedirá reescribirla para confirmar. Elige una contraseña que recuerdes porque la necesitarás para comandos administrativos (sudo) más tarde. Escríbela en un lugar seguro si es necesario.</p>
+</section>
+<section id="fase-3-actualizando-y-preparando-el-sistema-linux" class="level3">
+<h3 class="anchored" data-anchor-id="fase-3-actualizando-y-preparando-el-sistema-linux">Fase 3: Actualizando y preparando el sistema Linux</h3>
+<p>Ahora estás dentro de tu entorno Ubuntu. El prompt se verá algo como <code>username@computername:~$</code>. El símbolo <code>~</code> representa tu directorio home. Primero, actualiza el administrador de paquetes para asegurar que tengas acceso al software más reciente. Ejecuta estos comandos uno a la vez:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Cuando ejecutes este primer comando sudo, te pedirá tu contraseña - la que acabas de crear. De nuevo, nada aparecerá mientras escribes. Este comando actualiza la lista de paquetes disponibles. Verás muchas líneas de salida mostrando que se está conectando a los servidores de Ubuntu y descargando información de paquetes.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt upgrade <span class="at">-y</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este comando actualiza todos los paquetes instalados a sus versiones más recientes. La bandera <code>-y</code> automáticamente responde “sí” al prompt de confirmación. Esto podría tomar varios minutos y mostrar mucha salida. No te preocupes si ves advertencias sobre actualizaciones del kernel siendo retenidas - esto es normal en WSL.</p>
+</section>
+<section id="fase-4-instalando-node.js-y-npm" class="level3">
+<h3 class="anchored" data-anchor-id="fase-4-instalando-node.js-y-npm">Fase 4: Instalando Node.js y npm</h3>
+<p>Claude Code requiere Node.js versión 18 o superior. Aunque podrías instalar Node.js a través de los repositorios predeterminados de Ubuntu, a menudo contienen versiones anteriores. En su lugar, usaremos el repositorio de NodeSource para obtener la versión LTS más reciente. Primero, descarga y ejecuta el script de configuración:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://deb.nodesource.com/setup_20.x <span class="kw">|</span> <span class="fu">sudo</span> <span class="at">-E</span> bash <span class="at">-</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este comando hace varias cosas: <code>curl</code> descarga el script de configuración, <code>-fsSL</code> asegura que falle apropiadamente en errores y muestre una barra de progreso, la tubería <code>|</code> envía el script descargado a bash para ejecutarlo, y <code>sudo -E</code> lo ejecuta con privilegios de administrador mientras preserva las variables de entorno. Verás salida mostrando que está agregando la clave de firma y repositorio de NodeSource.</p>
+<p>Ahora instala Node.js:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install <span class="at">-y</span> nodejs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Esto instala tanto Node.js como npm (Administrador de Paquetes de Node). La instalación mostrará progreso y se completará en aproximadamente un minuto. Verifica que la instalación funcionó:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">node</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Esto debería mostrar algo como <code>v20.11.0</code> o superior. Luego verifica npm:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Esto debería mostrar versión 10.x.x o superior.</p>
+</section>
+<section id="fase-5-configurando-npm-para-instalaciones-de-usuario" class="level3">
+<h3 class="anchored" data-anchor-id="fase-5-configurando-npm-para-instalaciones-de-usuario">Fase 5: Configurando npm para instalaciones de usuario</h3>
+<p>Por defecto, npm trata de instalar paquetes globales en directorios del sistema, lo que requiere sudo y puede causar problemas de permisos. Configuraremos para que use un directorio en tu carpeta home en su lugar. Esta es una mejor práctica que previene muchos problemas comunes. Primero, crea un directorio para paquetes globales de npm:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.npm-global</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La bandera <code>-p</code> significa “crear directorios padre según sea necesario”. El <code>~/.npm-global</code> es un directorio oculto (el punto lo hace oculto) en tu carpeta home. Dile a npm que use este directorio:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> config set prefix ~/.npm-global</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ahora necesitas agregar este directorio a tu PATH para que tu sistema pueda encontrar los programas instalados. El PATH es como una lista de lugares donde tu sistema busca comandos. Agrégalo a tu archivo de configuración:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PATH=~/.npm-global/bin:$PATH'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este comando añade (<code>&gt;&gt;</code>) una línea a tu archivo <code>.bashrc</code>, que se ejecuta cada vez que abres un terminal. La línea agrega tu directorio global de npm al principio del PATH. Aplica los cambios a tu sesión actual:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Esto recarga tu archivo <code>.bashrc</code> sin necesidad de cerrar y reabrir el terminal. Puedes verificar que funcionó ejecutando:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$PATH</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Deberías ver <code>/home/tunombredeusuario/.npm-global/bin</code> al principio de la salida.</p>
+</section>
+</section>
+<section id="instalando-claude-code-mismo" class="level2">
+<h2 class="anchored" data-anchor-id="instalando-claude-code-mismo">Instalando Claude Code mismo</h2>
+<p>Ahora llegamos al momento para el que te has estado preparando - realmente instalar Claude Code. Si los pasos anteriores fueron como preparar un lecho de jardín, aquí es donde plantamos la semilla. La buena noticia es que si has seguido los pasos anteriores correctamente, esta parte debería ser fluida y directa.</p>
+<section id="entendiendo-el-proceso-de-instalación-de-npm" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-el-proceso-de-instalación-de-npm">Entendiendo el proceso de instalación de npm</h3>
+<p>Antes de ejecutar el comando de instalación, entendamos qué está a punto de pasar. Cuando instalas un paquete globalmente con npm (eso es lo que significa la bandera <code>-g</code>), npm descarga el paquete y todas sus dependencias del registro de npm, un repositorio masivo en línea de paquetes JavaScript. Luego coloca los archivos ejecutables en tu directorio bin global designado (¿recuerdas cuando configuramos eso?), haciéndolos disponibles como comandos que puedes ejecutar desde cualquier lugar en tu terminal.</p>
+<p>Abre tu terminal WSL Ubuntu si no está ya abierto. Puedes verificar que estás en el lugar correcto verificando que tu prompt muestre tu nombre de usuario de Linux, no tu ruta de Windows. Debería verse algo como <code>username@computername:~$</code>. Si ves algo como <code>/mnt/c/Users/...</code>, estás viendo tu sistema de archivos de Windows a través de Linux, lo cual está bien - puedes ejecutar la instalación desde cualquier lugar.</p>
+</section>
+<section id="ejecutando-el-comando-de-instalación" class="level3">
+<h3 class="anchored" data-anchor-id="ejecutando-el-comando-de-instalación">Ejecutando el comando de instalación</h3>
+<p>Ahora, escribe o copia este comando exactamente:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install <span class="at">-g</span> @anthropic-ai/claude-code</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Permíteme desglosar lo que significa cada parte. El <code>npm install</code> le dice a npm que descargue e instale un paquete. La bandera <code>-g</code> significa “globalmente” - instalar esto para uso en cualquier lugar del sistema, no solo en un proyecto específico. El <code>@anthropic-ai/claude-code</code> es el nombre oficial del paquete - la parte <code>@anthropic-ai</code> es el namespace de Anthropic en npm (como un nombre de usuario), asegurando que estés obteniendo el paquete auténtico, no el proyecto de alguien más con un nombre similar.</p>
+<p>Aquí hay un punto crucial que confunde a muchos usuarios de Windows: <strong>no uses sudo con este comando</strong>. En sistemas Linux tradicionales, podrías necesitar sudo para instalaciones globales, pero recuerda que configuramos npm para usar tu directorio personal específicamente para evitar esto. Si usas sudo aquí, instalará Claude Code en la ubicación incorrecta y causará problemas de permisos más tarde. Solo ejecuta el comando como tu usuario regular.</p>
+<p>Cuando presiones Enter, verás npm entrar en acción. La salida mostrará varias cosas ocurriendo. Primero, contacta el registro de npm y descarga los metadatos del paquete. Luego analiza dependencias - Claude Code depende de otros paquetes para funcionar, y npm determina exactamente qué versiones necesita. Verás una barra de progreso mientras descarga cada paquete. La salida podría verse algo como:</p>
+<pre><code>⸨⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⸩ ⠧ idealTree:@anthropic-ai/claude-code: timing idealTree:#root Completed in 1234ms</code></pre>
+<p>No te preocupes si ves advertencias sobre dependencias opcionales o paquetes obsoletos - estas son comunes y usualmente inofensivas. Lo que importa es que la instalación se complete sin errores. Todo el proceso típicamente toma 30 segundos a 2 minutos dependiendo de tu velocidad de internet.</p>
+</section>
+<section id="entendiendo-lo-que-se-acaba-de-instalar" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-lo-que-se-acaba-de-instalar">Entendiendo lo que se acaba de instalar</h3>
+<p>Cuando la instalación termine, npm mostrará un resumen de lo que instaló. Podrías ver algo indicando la versión instalada, como <code>+ @anthropic-ai/claude-code@1.0.38</code>. El signo más significa que fue agregado exitosamente, y el número después del símbolo @ es la versión. A partir de julio de 2025, la versión 1.0.38 es la más reciente, pero podrías ver una versión más nueva si se han lanzado actualizaciones.</p>
+<p>¿Qué pasó realmente detrás de escenas? npm creó un nuevo directorio en <code>~/.npm-global/lib/node_modules/@anthropic-ai/claude-code/</code> conteniendo todos los archivos de Claude Code. También creó un enlace simbólico (como un acceso directo) en <code>~/.npm-global/bin/</code> que apunta al ejecutable principal de Claude Code. Esta es la razón por la que ahora puedes escribir <code>claude</code> desde cualquier lugar y el sistema sabe qué ejecutar.</p>
+</section>
+<section id="verificando-la-instalación" class="level3">
+<h3 class="anchored" data-anchor-id="verificando-la-instalación">Verificando la instalación</h3>
+<p>Antes de celebrar, asegurémonos de que todo se instaló correctamente. Escribe:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Esto debería imprimir inmediatamente el número de versión, algo como <code>1.0.38</code>. Si ves esto, ¡felicidades - Claude Code está instalado! Si en su lugar ves <code>command not found</code>, no entres en pánico. Esto usualmente significa que el PATH que configuramos anteriormente no está funcionando correctamente. Intenta ejecutar <code>source ~/.bashrc</code> de nuevo para recargar tu configuración, luego intenta el comando de versión otra vez.</p>
+</section>
+<section id="primera-ejecución-y-autenticación" class="level3">
+<h3 class="anchored" data-anchor-id="primera-ejecución-y-autenticación">Primera ejecución y autenticación</h3>
+<p>Ahora para la parte emocionante - realmente iniciemos Claude Code. Antes de ejecutarlo, navega a un directorio donde tengas un proyecto de codificación, o crea un directorio de prueba:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> ~/test-claude-project</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/test-claude-project</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>El comando <code>mkdir</code> crea un nuevo directorio, y <code>cd</code> cambia hacia él. El símbolo <code>~</code> es un acceso directo para tu directorio home de Linux. Ahora, simplemente escribe:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La primera vez que ejecutes Claude Code, necesita conectarse a los servidores de Anthropic para verificar tu acceso. Verás un mensaje de bienvenida y luego se te presentarán opciones de autenticación. Aquí es donde Claude Code difiere de muchas herramientas de línea de comandos - no es solo un programa local sino una conexión a los servicios de IA de Anthropic.</p>
+</section>
+<section id="entendiendo-las-opciones-de-autenticación" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-las-opciones-de-autenticación">Entendiendo las opciones de autenticación</h3>
+<p>Claude Code te presentará varios métodos de autenticación, y elegir el correcto depende de cómo quieras usar y pagar por el servicio. Permíteme explicar cada opción en detalle.</p>
+<p>La opción <strong>Consola de Anthropic</strong> es para desarrolladores que quieren acceso API de pago por uso. Esto es ideal si ya estás usando la API de Anthropic para otros proyectos o prefieres pagar solo por lo que uses. Necesitarás crear una cuenta en console.anthropic.com, agregar un método de pago, y generar una clave API. El uso se factura por token (aproximadamente por palabra) procesado por la IA.</p>
+<p>La opción de <strong>suscripción Claude Pro/Max</strong> es para usuarios que tienen una suscripción mensual a Claude a través de claude.ai. A $20/mes para Pro o $30/mes para Max, esto te da cierta cantidad de uso a través de todas las interfaces de Claude, incluyendo Claude Code. Esta es a menudo la opción más conveniente para desarrolladores individuales que también usan Claude para otras tareas.</p>
+<p>Las <strong>opciones Enterprise</strong> (AWS Bedrock o Google Vertex AI) son para organizaciones que tienen acuerdos empresariales con estos proveedores de nube. Si tu empresa usa estos servicios, podrías recibir instrucciones para usar uno de estos métodos de autenticación con credenciales proporcionadas por tu departamento de TI.</p>
+</section>
+<section id="completando-el-proceso-de-autenticación" class="level3">
+<h3 class="anchored" data-anchor-id="completando-el-proceso-de-autenticación">Completando el proceso de autenticación</h3>
+<p>Cuando selecciones una opción (usando teclas de flecha y Enter), Claude Code abrirá tu navegador web predeterminado. Si estás en WSL y un navegador no se abre automáticamente, verás una URL que puedes copiar y pegar en cualquier navegador. La URL se verá algo como <code>https://claude.ai/auth/code?...</code> con una cadena larga de caracteres.</p>
+<p>En el navegador, iniciarás sesión en tu servicio elegido. Si aún no tienes una cuenta, puedes crear una en este punto. Para la Consola de Anthropic, necesitarás configurar facturación. Para Claude Pro/Max, necesitarás una suscripción activa. Después de iniciar sesión y autorizar Claude Code, verás un token de autenticación - una cadena larga de caracteres de apariencia aleatoria.</p>
+<p>Copia este token completo (Ctrl+C en Windows), regresa a tu terminal, y pégalo (clic derecho en la mayoría de terminales, o Ctrl+Shift+V en Windows Terminal) cuando se solicite. Presiona Enter, y Claude Code verificará el token y lo guardará de forma segura. Deberías ver un mensaje de éxito confirmando que estás conectado.</p>
+</section>
+<section id="solucionando-problemas-de-autenticación" class="level3">
+<h3 class="anchored" data-anchor-id="solucionando-problemas-de-autenticación">Solucionando problemas de autenticación</h3>
+<p>Si la autenticación falla, las causas más comunes son copiar el token incorrectamente (perdiendo caracteres al principio o al final), un token expirado (solo son válidos por unos minutos), o problemas de conectividad de red. Claude Code usualmente te dará un mensaje de error útil apuntando al problema específico. Siempre puedes reiniciar el proceso de autenticación ejecutando <code>claude</code> de nuevo o usando el comando <code>/auth reset</code> una vez dentro de Claude Code.</p>
+</section>
+</section>
+<section id="configuración-y-verificación" class="level2">
+<h2 class="anchored" data-anchor-id="configuración-y-verificación">Configuración y verificación</h2>
+<p>Después de instalar y autenticar Claude Code exitosamente, eres como un piloto que ha encendido el motor pero no ha despegado aún. Esta sección te ayudará a entender cómo configurar Claude Code para tus necesidades específicas y verificar que todo esté funcionando correctamente. Piensa en esto como tu lista de verificación pre-vuelo - asegurándote de que todos los sistemas estén listos antes de comenzar a usar Claude Code para trabajo real.</p>
+<section id="entendiendo-el-sistema-de-configuración-de-claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-el-sistema-de-configuración-de-claude-code">Entendiendo el sistema de configuración de Claude Code</h3>
+<p>Claude Code usa un sistema de configuración por capas, similar a cómo Git maneja configuraciones. Esto podría parecer complejo al principio, pero es realmente bastante elegante una vez que entiendes el razonamiento. Hay tres niveles de configuraciones, cada uno sirviendo un propósito diferente y tomando precedencia en un orden específico.</p>
+<p>Las configuraciones globales viven en <code>~/.claude/settings.json</code> en tu directorio home de Linux. Estas se aplican a todos tus proyectos y contienen cosas como tu tema preferido, comportamientos predeterminados, y tokens de autenticación. Para ver este archivo, puedes usar el comando <code>cat ~/.claude/settings.json</code> o abrirlo en un editor de texto con <code>nano ~/.claude/settings.json</code>. No te preocupes si el archivo no existe aún - Claude Code lo crea automáticamente cuando es necesario.</p>
+<p>Las configuraciones específicas del proyecto van en <code>.claude/settings.json</code> dentro de cada directorio de proyecto. Estas sobrescriben las configuraciones globales para ese proyecto particular. Por ejemplo, podrías querer que Claude Code sea más cauteloso con cambios en tu proyecto de producción pero más experimental en tus proyectos personales. Cuando Claude Code inicia, busca este archivo en el directorio actual y aplica cualquier configuración que encuentre.</p>
+<p>Las configuraciones personales se almacenan en <code>.claude/settings.local.json</code> dentro de directorios de proyecto. Este archivo está destinado a ser excluido del control de versiones (agregado a .gitignore) para que cada desarrollador en un equipo pueda tener sus propias preferencias sin afectar a otros. Esto es perfecto para configuraciones como preferencias del editor o rutas de archivos locales que varían entre desarrolladores.</p>
+</section>
+<section id="configurando-permisos-y-límites" class="level3">
+<h3 class="anchored" data-anchor-id="configurando-permisos-y-límites">Configurando permisos y límites</h3>
+<p>Una de las características más importantes de Claude Code es su sistema de permisos. A diferencia de dar acceso a un desarrollador humano a tu base de código, donde se aplican la confianza y el juicio profesional, un asistente de IA necesita límites explícitos. Exploremos cómo configurar estos correctamente.</p>
+<p>Inicia Claude Code en tu proyecto de prueba ejecutando <code>claude</code> y luego escribe el comando <code>/permissions</code>. Esto te muestra lo que Claude Code está actualmente permitido hacer. Por defecto, tiene permisos bastante conservadores - puede leer archivos, sugerir cambios, y ayudar con código, pero necesita tu aprobación para cualquier cosa que modifique archivos o ejecute comandos.</p>
+<p>Para ajustar permisos, usa el comando <code>/permissions edit</code>. Esto abre un menú interactivo donde puedes alternar diferentes capacidades. Por ejemplo, podrías ver opciones como “Permitir creación de archivos”, “Permitir modificación de archivos”, “Permitir ejecución de comandos”, y “Permitir operaciones git”. Usa las teclas de flecha para navegar y Espacio para alternar cada permiso encendido o apagado.</p>
+<p>Permíteme explicar lo que significa cada tipo de permiso en la práctica. “Permitir creación de archivos” permite a Claude Code crear nuevos archivos cuando le pides que estructure un nuevo componente o agregue un archivo de configuración. Sin esto, solo puede mostrarte lo que el archivo debería contener, y tienes que crearlo manualmente. “Permitir modificación de archivos” es similar pero para archivos existentes - con esto habilitado, Claude Code puede aplicar directamente correcciones o refactorizaciones en lugar de solo sugerirlas.</p>
+<p>“Permitir ejecución de comandos” es más poderoso y debería usarse con consideración. Con esto habilitado, Claude Code puede ejecutar comandos de construcción, pruebas, o scripts en tu nombre. Esto es increíblemente conveniente pero también significa que confías en Claude Code para ejecutar comandos que potencialmente podrían afectar tu sistema. “Permitir operaciones git” habilita características como crear commits, cambiar ramas, o hacer push de cambios - útil para mantener un historial limpio de control de versiones.</p>
+</section>
+<section id="configurando-compatibilidad-de-terminal" class="level3">
+<h3 class="anchored" data-anchor-id="configurando-compatibilidad-de-terminal">Configurando compatibilidad de terminal</h3>
+<p>Claude Code usa varios caracteres Unicode y códigos de color ANSI para crear su interfaz. Si ves caracteres extraños o la pantalla se ve rota, necesitas configurar la compatibilidad del terminal. Escribe <code>/config</code> dentro de Claude Code para acceder a configuraciones de pantalla.</p>
+<p>El menú de configuración te permite elegir entre diferentes modos de pantalla. Si estás usando Windows Terminal (recomendado), selecciona “Terminal Moderno” para la mejor experiencia con colores completos y caracteres especiales. Si estás usando un terminal más antiguo o accediendo WSL a través de SSH, podrías necesitar seleccionar “Modo Compatible” que usa caracteres ASCII más simples.</p>
+<p>También puedes configurar temas de color aquí. Claude Code típicamente ofrece opciones como “Oscuro”, “Claro”, “Alto Contraste”, y “Solarized”. Elige lo que sea cómodo para tus ojos - si no estás seguro, comienza con “Oscuro” ya que tiende a ser más fácil para los ojos durante sesiones largas de codificación. El tema afecta no solo la interfaz de Claude Code sino también cómo resalta la sintaxis de fragmentos de código.</p>
+</section>
+<section id="probando-funcionalidad-principal" class="level3">
+<h3 class="anchored" data-anchor-id="probando-funcionalidad-principal">Probando funcionalidad principal</h3>
+<p>Ahora verifiquemos que Claude Code esté funcionando correctamente con una serie de pruebas. Piensa en esto como un crucero de prueba - probaremos cada sistema principal para asegurar que esté funcionando correctamente. Primero, probemos la interacción básica. Escribe:</p>
+<pre><code>explica qué archivos están en este directorio</code></pre>
+<p>Claude Code debería responder listando los archivos en tu directorio actual (que podrían estar vacíos si estás en el directorio de prueba que creamos) y explicando lo que ve. Esto prueba que Claude Code puede leer tu sistema de archivos correctamente a través de WSL.</p>
+<p>Después, probemos la creación de archivos. Pregunta a Claude Code:</p>
+<pre><code>crea un simple script hello world en Python</code></pre>
+<p>Si tienes permisos de creación de archivos habilitados, Claude Code creará un nuevo archivo llamado algo como <code>hello_world.py</code> con un script básico de Python. Si los permisos están deshabilitados, te mostrará el contenido pero te pedirá crear el archivo manualmente. Esto prueba el sistema de permisos y la capacidad de creación de archivos.</p>
+</section>
+<section id="probando-integración-del-sistema-de-archivos-de-windows" class="level3">
+<h3 class="anchored" data-anchor-id="probando-integración-del-sistema-de-archivos-de-windows">Probando integración del sistema de archivos de Windows</h3>
+<p>Un aspecto único de usar Claude Code en Windows a través de WSL es acceder a tus archivos de Windows. Verifiquemos que esto funcione correctamente. Navega a tu carpeta de Documentos de Windows:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /mnt/c/Users/<span class="pp">[</span><span class="ss">TuNombreDeUsuarioDeWindows</span><span class="pp">]</span>/Documents</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reemplaza <code>[TuNombreDeUsuarioDeWindows]</code> con tu nombre de usuario real de Windows. Nota que si tu nombre de usuario tiene espacios, necesitas escaparlos con barras inversas o envolver la ruta en comillas, como <code>/mnt/c/Users/Juan\ Perez/Documents</code> o <code>"/mnt/c/Users/Juan Perez/Documents"</code>.</p>
+<p>Una vez ahí, ejecuta Claude Code de nuevo y pregunta:</p>
+<pre><code>lista todos los archivos en este directorio</code></pre>
+<p>Claude Code debería mostrar exitosamente el contenido de tu carpeta de Documentos de Windows. Esto confirma que el puente del sistema de archivos WSL está funcionando correctamente. Sin embargo, podrías notar que las operaciones son ligeramente más lentas cuando trabajas con archivos de Windows comparado con archivos nativos de Linux - esto es normal debido a la capa de traducción del sistema de archivos.</p>
+</section>
+<section id="verificando-integración-con-git" class="level3">
+<h3 class="anchored" data-anchor-id="verificando-integración-con-git">Verificando integración con Git</h3>
+<p>Si planeas usar las características de Git de Claude Code, probemos esas también. Primero, verifica si Git está instalado en tu entorno WSL:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Si Git no está instalado, instálalo con:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install git <span class="at">-y</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ahora crea un repositorio Git de prueba:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/test-claude-project</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"# Proyecto de Prueba"</span> <span class="op">&gt;</span> README.md</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add README.md</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Commit inicial"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Inicia Claude Code de nuevo y prueba:</p>
+<pre><code>muéstrame el historial de git</code></pre>
+<p>Claude Code debería mostrar tu historial de commits. Si tienes permisos de operaciones Git habilitados, también puedes pedirle crear commits, cambiar ramas, o realizar otras operaciones Git.</p>
+</section>
+<section id="personalizando-el-comportamiento-de-claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="personalizando-el-comportamiento-de-claude-code">Personalizando el comportamiento de Claude Code</h3>
+<p>Más allá de permisos y configuraciones de pantalla, Claude Code tiene varias configuraciones de comportamiento que puedes ajustar. Escribe <code>/settings</code> para ver todas las opciones disponibles. Algunas particularmente útiles incluyen configurar tus lenguajes de programación preferidos (para que Claude Code pueda adaptar sus sugerencias), configurar comportamiento de autoguardado, y ajustar la verbosidad de las respuestas de Claude Code.</p>
+<p>Por ejemplo, si trabajas principalmente con React y TypeScript, podrías querer decirle esto a Claude Code para que asuma estas tecnologías cuando hagas preguntas generales. O si encuentras las respuestas de Claude Code demasiado verbosas, puedes ajustar el nivel de detalle para que sea más conciso.</p>
+</section>
+<section id="creando-tu-primera-interacción-real" class="level3">
+<h3 class="anchored" data-anchor-id="creando-tu-primera-interacción-real">Creando tu primera interacción real</h3>
+<p>Con todo configurado y verificado, hagamos algo más significativo que hello world. Si tienes un proyecto real, navega hacia él. De lo contrario, creemos un proyecto web simple:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> ~/my-web-app</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/my-web-app</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ahora pide a Claude Code que te ayude a estructurar un proyecto:</p>
+<pre><code>crea una página HTML simple con estilos CSS e interactividad JavaScript</code></pre>
+<p>Observa mientras Claude Code crea múltiples archivos, explica lo que hace cada uno, y muestra cómo funcionan juntos. Esto demuestra la capacidad de Claude Code para trabajar con múltiples archivos y tecnologías simultáneamente. Puedes hacer seguimiento con preguntas como “explica cómo se conecta el JavaScript con el HTML” o “haz el estilo más moderno” para ver cómo Claude Code mantiene el contexto a través de la conversación.</p>
+</section>
+<section id="guardando-y-respaldando-tu-configuración" class="level3">
+<h3 class="anchored" data-anchor-id="guardando-y-respaldando-tu-configuración">Guardando y respaldando tu configuración</h3>
+<p>Una vez que tengas Claude Code configurado a tu gusto, es sabio respaldar tus configuraciones. Copia tu archivo de configuración global a una ubicación segura:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/.claude/settings.json ~/claude-backup-settings.json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Si estás usando control de versiones para tus dotfiles (una práctica común de desarrollador), podrías querer agregar la configuración de Claude a tu repositorio de dotfiles. Esto hace fácil restaurar tus configuraciones si necesitas reinstalar o configurar Claude Code en otra máquina.</p>
+</section>
+</section>
+<section id="problemas-comunes-de-solución-de-problemas" class="level2">
+<h2 class="anchored" data-anchor-id="problemas-comunes-de-solución-de-problemas">Problemas comunes de solución de problemas</h2>
+<p>El error de instalación más frecuente es <strong>“Claude Code no es compatible con Windows”</strong>, que ocurre cuando ejecutas npm desde CMD o PowerShell de Windows en lugar de WSL. Siempre asegúrate de estar dentro del terminal WSL (Ubuntu). Si encuentras <strong>“exec: node: not found”</strong>, WSL está usando la instalación de Node.js de Windows en lugar de la versión de Linux - reinstala Node.js dentro de WSL y verifica que <code>which node</code> muestre <code>/usr/bin/node</code>, no una ruta <code>/mnt/c/...</code>.</p>
+<p>Los errores de permisos (EPERM) ocurren cuando npm trata de instalar en directorios del sistema. Nunca uses <code>sudo npm install -g</code> - en su lugar, configura el prefijo de npm escribible por el usuario como se describe arriba. Para fallos de autenticación, resetea con <code>/auth reset</code> y reconfigura con <code>/auth login</code>. Los problemas de PATH pueden resolverse asegurando que <code>export PATH=~/.npm-global/bin:$PATH</code> esté en tu archivo <code>~/.bashrc</code>.</p>
+</section>
+<section id="rendimiento-y-mejores-prácticas" class="level2">
+<h2 class="anchored" data-anchor-id="rendimiento-y-mejores-prácticas">Rendimiento y mejores prácticas</h2>
+<p>Para rendimiento óptimo, trabaja dentro del sistema de archivos WSL (<code>/home/...</code>) en lugar de acceder archivos de Windows a través de <code>/mnt/c/...</code> cuando sea posible. Claude Code puede consumir recursos significativos con bases de código grandes, así que usa flujos de trabajo basados en archivos para contenido extenso en lugar de pegado directo. Inicia Claude desde el directorio raíz de tu proyecto, usa prompts descriptivos para tareas complejas, y siempre revisa cambios antes de aprobarlos.</p>
+<p>Las mejores prácticas de seguridad incluyen nunca commitear claves API al control de versiones, usar GitHub Secrets para integración CI/CD, configurar permisos apropiados de acceso a archivos, y revisar regularmente controles de acceso. La herramienta almacena claves API en un equivalente de keychain encriptado y proporciona controles de permisos granulares para entornos empresariales.</p>
+</section>
+<section id="tutorial-creando-tu-primer-proyecto-hello-world-con-claude-code" class="level2">
+<h2 class="anchored" data-anchor-id="tutorial-creando-tu-primer-proyecto-hello-world-con-claude-code">Tutorial: Creando tu Primer Proyecto “Hello World” con Claude Code</h2>
+<p>Ahora que Claude Code está instalado y configurado, caminemos a través de crear tu primer proyecto juntos. Este tutorial demostrará cómo Claude Code transforma conversaciones en lenguaje natural en código funcional, usando un programa clásico “Hello World” en C# o VB.NET. Piensa en esto como tu primera conversación real con tu nuevo compañero de programación IA, donde exploraremos no solo lo que Claude Code puede hacer, sino cómo comunicarte con él efectivamente.</p>
+<section id="configurando-tu-espacio-de-trabajo-del-proyecto" class="level3">
+<h3 class="anchored" data-anchor-id="configurando-tu-espacio-de-trabajo-del-proyecto">Configurando tu espacio de trabajo del proyecto</h3>
+<p>Primero, creemos un directorio dedicado para nuestro proyecto Hello World. Abre tu terminal WSL y navega a una ubicación donde quieras crear el proyecto. Recomiendo quedarte dentro del sistema de archivos Linux para mejor rendimiento, en lugar de usar el sistema de archivos de Windows a través de <code>/mnt/c/</code>. Escribe estos comandos:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> hello-world-dotnet</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> hello-world-dotnet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Estos comandos te llevan a tu directorio home, crean una nueva carpeta llamada <code>hello-world-dotnet</code>, y luego se mueven a esa carpeta. La razón por la que estamos creando un directorio dedicado es que Claude Code funciona mejor cuando tiene un contexto de proyecto claro. Cuando inicias Claude Code desde dentro de un directorio de proyecto, entiende que todo lo que discutas se relaciona con ese proyecto específico.</p>
+<p>Ahora, iniciemos Claude Code desde dentro de este directorio:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Deberías ver el mensaje de bienvenida de Claude Code y un prompt esperando tu entrada. Aquí es donde comienza la magia. A diferencia del desarrollo tradicional donde inmediatamente comenzarías escribiendo código, con Claude Code comienzas teniendo una conversación sobre lo que quieres crear.</p>
+</section>
+<section id="teniendo-tu-primera-conversación-con-claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="teniendo-tu-primera-conversación-con-claude-code">Teniendo tu primera conversación con Claude Code</h3>
+<p>Comencemos con una solicitud simple. Escribe lo siguiente y presiona Enter:</p>
+<pre><code>Quiero crear una aplicación de consola Hello World. ¿Debería usar C# o VB.NET?</code></pre>
+<p>Nota cómo no estamos solo comandando a Claude Code que haga algo, sino involucrándolo en un proceso de toma de decisiones. Claude Code probablemente responderá con una comparación reflexiva de ambos lenguajes, explicando que C# es más ampliamente usado en desarrollo .NET moderno con más recursos de aprendizaje disponibles, mientras que VB.NET podría ser más legible para principiantes que vienen de ciertos antecedentes. Este tipo de diálogo te ayuda a tomar decisiones informadas en lugar de elecciones arbitrarias.</p>
+<p>Basado en la respuesta de Claude Code, digamos que decides usar C#. Ahora puedes ser más específico con tu próxima solicitud:</p>
+<pre><code>Vamos a crear una aplicación de consola Hello World en C#. Por favor configura la estructura del proyecto y explica qué hace cada archivo.</code></pre>
+<p>Observa mientras Claude Code entra en acción. Si tienes permisos de creación de archivos habilitados, creará varios archivos. Si no, te mostrará el contenido para crear manualmente. De cualquier manera, Claude Code explicará el propósito de cada archivo que crea o sugiere.</p>
+</section>
+<section id="entendiendo-la-estructura-del-proyecto" class="level3">
+<h3 class="anchored" data-anchor-id="entendiendo-la-estructura-del-proyecto">Entendiendo la estructura del proyecto</h3>
+<p>Claude Code típicamente creará una estructura como esta para una aplicación de consola C# moderna. Permíteme guiarte a través de lo que crea y por qué cada pieza importa. Primero, creará un archivo de proyecto, usualmente llamado <code>HelloWorld.csproj</code>. Este archivo XML es como una receta que le dice al sistema de construcción .NET cómo compilar tu programa. Claude Code podría crear algo como esto:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">Project</span><span class="ot"> Sdk=</span><span class="st">"Microsoft.NET.Sdk"</span>&gt;</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">PropertyGroup</span>&gt;</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">OutputType</span>&gt;Exe&lt;/<span class="kw">OutputType</span>&gt;</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">TargetFramework</span>&gt;net8.0&lt;/<span class="kw">TargetFramework</span>&gt;</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">Nullable</span>&gt;enable&lt;/<span class="kw">Nullable</span>&gt;</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">ImplicitUsings</span>&gt;enable&lt;/<span class="kw">ImplicitUsings</span>&gt;</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">PropertyGroup</span>&gt;</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">Project</span>&gt;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Claude Code explicará que <code>&lt;OutputType&gt;Exe&lt;/OutputType&gt;</code> significa que estamos construyendo un programa ejecutable (en oposición a una biblioteca), y <code>&lt;TargetFramework&gt;net8.0&lt;/TargetFramework&gt;</code> especifica que estamos usando .NET 8.0, la versión de soporte a largo plazo más reciente a partir de 2025. Las configuraciones nullable e implicit usings son características modernas de C# que hacen el código más seguro y limpio.</p>
+<p>Después, Claude Code creará el archivo principal del programa, típicamente <code>Program.cs</code>:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Este es el punto de entrada de nuestra aplicación</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Hello, World!"</span><span class="op">);</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Hagámoslo interactivo</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"¿Cómo te llamas?"</span><span class="op">);</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="dt">string</span> name <span class="op">=</span> Console<span class="op">.</span><span class="fu">ReadLine</span><span class="op">()</span> <span class="op">??</span> <span class="st">"Anónimo"</span><span class="op">;</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"¡Mucho gusto conocerte, {name}!"</span><span class="op">);</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Mantener la ventana de consola abierta</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"</span><span class="sc">\n</span><span class="st">Presiona cualquier tecla para salir..."</span><span class="op">);</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">ReadKey</span><span class="op">();</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Nota cómo Claude Code no solo crea el “Hello World” mínimo sino que agrega mejoras útiles como hacerlo interactivo y prevenir que la ventana de consola se cierre inmediatamente. Estos toques muestran cómo la asistencia IA va más allá de la generación simple de código para realmente pensar en la experiencia del usuario.</p>
+</section>
+<section id="explorando-los-poderes-explicativos-de-claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="explorando-los-poderes-explicativos-de-claude-code">Explorando los poderes explicativos de Claude Code</h3>
+<p>Una de las mayores fortalezas de Claude Code es su capacidad para explicar código en contexto. Intenta preguntar:</p>
+<pre><code>¿Puedes explicar el operador ?? en el código que acabas de crear?</code></pre>
+<p>Claude Code explicará que el <code>??</code> es el operador de coalescencia nula, que proporciona un valor predeterminado (“Anónimo”) si <code>Console.ReadLine()</code> devuelve null. Este tipo de explicación bajo demanda te ayuda a aprender mientras codificas. Puedes profundizar haciendo preguntas de seguimiento:</p>
+<pre><code>¿Cuándo devolvería ReadLine null? Muéstrame otras formas de manejar esto.</code></pre>
+<p>Este enfoque conversacional para aprender es lo que hace especial a Claude Code. En lugar de buscar en documentación o Stack Overflow, estás teniendo una discusión contextual sobre tu código específico.</p>
+</section>
+<section id="construyendo-y-ejecutando-el-proyecto" class="level3">
+<h3 class="anchored" data-anchor-id="construyendo-y-ejecutando-el-proyecto">Construyendo y ejecutando el proyecto</h3>
+<p>Ahora veamos si nuestro código realmente funciona. Primero, necesitamos verificar si .NET está instalado en WSL. Pregunta a Claude Code:</p>
+<pre><code>¿Cómo verifico si .NET SDK está instalado y ejecuto este proyecto?</code></pre>
+<p>Claude Code te guiará a través de verificar .NET con <code>dotnet --version</code> y, si no está instalado, proporcionar los comandos para instalarlo en WSL. Esto podría involucrar comandos como:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar .NET SDK en WSL</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://dot.net/v1/dotnet-install.sh</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x dotnet-install.sh</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./dotnet-install.sh</span> <span class="at">--channel</span> 8.0</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Una vez que .NET esté instalado, Claude Code te mostrará cómo construir y ejecutar tu proyecto:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">dotnet</span> build</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="ex">dotnet</span> run</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Cuando ejecutes estos comandos, verás tu programa Hello World cobrar vida, preguntando tu nombre y respondiendo personalmente. Este momento, donde las instrucciones conversacionales se convierten en código ejecutándose, demuestra el ciclo completo de desarrollo asistido por IA.</p>
+</section>
+<section id="iterando-y-mejorando" class="level3">
+<h3 class="anchored" data-anchor-id="iterando-y-mejorando">Iterando y mejorando</h3>
+<p>El verdadero poder de Claude Code emerge cuando quieres modificar o mejorar tu programa. Intenta solicitudes como:</p>
+<pre><code>Agrega color a la salida de consola para hacerla más visualmente atractiva</code></pre>
+<p>Claude Code modificará tu programa para incluir texto coloreado:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode csharp code-with-copy"><code class="sourceCode cs"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">ForegroundColor</span> <span class="op">=</span> ConsoleColor<span class="op">.</span><span class="fu">Cyan</span><span class="op">;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"Hello, World!"</span><span class="op">);</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">ForegroundColor</span> <span class="op">=</span> ConsoleColor<span class="op">.</span><span class="fu">Yellow</span><span class="op">;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span><span class="st">"¿Cómo te llamas?"</span><span class="op">);</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">ResetColor</span><span class="op">();</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="dt">string</span> name <span class="op">=</span> Console<span class="op">.</span><span class="fu">ReadLine</span><span class="op">()</span> <span class="op">??</span> <span class="st">"Anónimo"</span><span class="op">;</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">ForegroundColor</span> <span class="op">=</span> ConsoleColor<span class="op">.</span><span class="fu">Green</span><span class="op">;</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>Console<span class="op">.</span><span class="fu">WriteLine</span><span class="op">(</span>$<span class="st">"¡Mucho gusto conocerte, {name}!"</span><span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>O intenta algo más complejo:</p>
+<pre><code>Convierte esto para mostrar el saludo en múltiples idiomas basado en la elección del usuario</code></pre>
+<p>Claude Code refactorizará tu programa simple en algo más sofisticado, quizás agregando un sistema de menú y traducciones. Este proceso de desarrollo iterativo se siente más como programación en pareja con un colega conocedor que codificación tradicional.</p>
+</section>
+<section id="aprendiendo-a-través-de-exploración" class="level3">
+<h3 class="anchored" data-anchor-id="aprendiendo-a-través-de-exploración">Aprendiendo a través de exploración</h3>
+<p>Exploremos la capacidad de Claude Code para enseñar a través de ejemplos. Pregunta:</p>
+<pre><code>Muéstrame cómo agregar manejo de errores a este programa</code></pre>
+<p>Claude Code podría envolver el código en bloques try-catch y explicar diferentes tipos de excepciones. Pero aquí es donde se pone interesante - también puedes hacer preguntas filosóficas:</p>
+<pre><code>¿Es este nivel de manejo de errores excesivo para un programa Hello World? ¿Cuál es el equilibrio correcto?</code></pre>
+<p>Este tipo de pregunta involucra a Claude Code en discusiones sobre principios de ingeniería de software, ayudándote a desarrollar juicio junto con habilidades técnicas.</p>
+</section>
+<section id="creando-la-alternativa-vb.net" class="level3">
+<h3 class="anchored" data-anchor-id="creando-la-alternativa-vb.net">Creando la alternativa VB.NET</h3>
+<p>Si tienes curiosidad sobre VB.NET o quieres ver la diferencia, pregunta a Claude Code:</p>
+<pre><code>Crea el mismo programa en VB.NET y ponlo en un archivo separado para poder comparar</code></pre>
+<p>Claude Code creará un archivo como <code>HelloWorld.vb</code>:</p>
+<pre class="vbnet"><code>Module Program
+    Sub Main()
+        ' Este es el punto de entrada de nuestra aplicación
+        Console.WriteLine("Hello, World!")
+        
+        ' Hagámoslo interactivo
+        Console.WriteLine("¿Cómo te llamas?")
+        Dim name As String = If(Console.ReadLine(), "Anónimo")
+        Console.WriteLine($"¡Mucho gusto conocerte, {name}!")
+        
+        ' Mantener la ventana de consola abierta
+        Console.WriteLine(vbCrLf &amp; "Presiona cualquier tecla para salir...")
+        Console.ReadKey()
+    End Sub
+End Module</code></pre>
+<p>Luego puedes pedirle a Claude Code que explique las diferencias entre las versiones C# y VB.NET, aprendiendo sobre variaciones de sintaxis, filosofías de lenguaje, y cuándo podrías elegir uno sobre el otro.</p>
+</section>
+<section id="mejores-prácticas-para-trabajar-con-claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="mejores-prácticas-para-trabajar-con-claude-code">Mejores prácticas para trabajar con Claude Code</h3>
+<p>A través de este tutorial, has aprendido varios principios clave para el uso efectivo de Claude Code. Primero, comienza con intenciones claras pero mantente abierto al diálogo - Claude Code a menudo sugiere mejoras que no habías considerado. Segundo, usa las habilidades explicativas de Claude Code para aprender mientras construyes - cada sesión de codificación puede ser una oportunidad de aprendizaje. Tercero, itera frecuentemente con solicitudes pequeñas en lugar de tratar de describir un programa completo por adelantado.</p>
+<p>Recuerda que Claude Code mantiene contexto a través de tu conversación, así que puedes referenciar “la función que acabamos de crear” o “el manejo de errores que discutimos” sin repetirte. Esta conciencia contextual hace que las tareas de desarrollo complejas se sientan más como conversación natural.</p>
+<p>Finalmente, no dudes en hacer meta-preguntas sobre la programación misma. Preguntas como “¿Se considera este enfoque una buena práctica?” o “¿Qué haría diferente un desarrollador senior?” te ayudan a crecer más allá de solo hacer que el código funcione.</p>
+</section>
+<section id="cerrando-tu-sesión" class="level3">
+<h3 class="anchored" data-anchor-id="cerrando-tu-sesión">Cerrando tu sesión</h3>
+<p>Cuando hayas terminado con tu proyecto Hello World, puedes simplemente escribir <code>exit</code> o <code>/quit</code> para salir de Claude Code. Tu código permanece en el directorio, listo para desarrollo adicional. Podrías querer inicializar un repositorio Git para rastrear tus cambios:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"Proyecto inicial Hello World con asistencia de Claude Code"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este tutorial te ha mostrado cómo Claude Code transforma la experiencia de desarrollo de escritura solitaria a conversación colaborativa. Has creado no solo un programa Hello World, sino explorado diferentes lenguajes, agregado características, discutido mejores prácticas, y aprendido nuevos conceptos en el camino. Este es el verdadero poder del desarrollo asistido por IA - no se trata solo de generar código más rápido, sino de aprender y mejorar mientras construyes.</p>
+</section>
+</section>
+<section id="conclusión" class="level2">
+<h2 class="anchored" data-anchor-id="conclusión">Conclusión</h2>
+<p>Aunque Claude Code requiere el paso adicional de configurar WSL2 en Windows 11, el proceso de instalación es directo una vez que entiendes el requisito del entorno Linux. La herramienta proporciona poderosas capacidades de desarrollo asistido por IA que se integran perfectamente con tu flujo de trabajo existente, ofreciendo comandos en lenguaje natural para edición de código, depuración y comprensión de proyectos. Seguir esta guía asegura una experiencia de instalación fluida y ayuda a evitar las trampas comunes que encuentran los usuarios de Windows al configurar herramientas de desarrollo basadas en terminal.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

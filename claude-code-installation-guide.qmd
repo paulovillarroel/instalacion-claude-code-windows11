@@ -1,0 +1,628 @@
+---
+title: "Claude Code Installation Guide for Windows 11: Setting Up with WSL2"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-copy: true
+    highlight-style: github
+  pdf:
+    toc: true
+    number-sections: true
+editor: visual
+---
+
+## Introduction
+
+Claude Code is Anthropic's official AI-powered coding assistant that runs in your terminal, but it **requires Windows Subsystem for Linux (WSL2)** to work on Windows 11 - it cannot run natively on Windows. This terminal-based tool integrates directly with your development environment to assist with code editing, debugging, testing, git workflows, and project understanding through natural language commands.
+
+## System requirements and prerequisites
+
+Before installing Claude Code on Windows 11, you'll need to set up a Linux environment through WSL2. The tool requires **Node.js 18+** (LTS recommended), **npm 10+**, and **WSL2 with Ubuntu 20.04+** or Debian 10+. Windows Terminal or an equivalent terminal emulator is recommended for the best experience. Git is also recommended for version control functionality.
+
+Before diving into the installation, let's understand what Claude Code needs to run properly on your Windows 11 system. Think of these requirements like ingredients for a recipe - missing even one can prevent the final dish from turning out right. I'll explain not just what you need, but why each component matters and how to check if you already have it.
+
+### Understanding why Claude Code needs Linux on Windows
+
+Claude Code is built as a command-line tool designed for Unix-like operating systems (Linux and macOS). While Windows is an excellent operating system, it handles certain technical aspects differently than Linux - things like file permissions, process management, and system calls. Rather than creating a separate Windows version, Anthropic chose to leverage Microsoft's Windows Subsystem for Linux (WSL2), which lets you run a real Linux environment inside Windows. This approach ensures Claude Code works exactly the same way across all platforms and gets all the same updates and features.
+
+### Windows 11 version requirements
+
+You'll need Windows 11 version 21H2 or later. To check your version, press Windows key + R to open the Run dialog, type `winver`, and press Enter. A window will pop up showing your Windows version. Look for something like "Version 22H2 (OS Build 22621.2428)" - as long as it says 21H2 or higher (like 22H2, 23H2), you're good to go. If you're on an older version, you'll need to update Windows first by going to Settings \> Windows Update and installing any available updates.
+
+The reason version 21H2 or later is required is that Microsoft significantly improved WSL2 integration in these versions, including better file system performance and GPU support. While WSL2 technically works on older Windows 11 versions, you'll have a much smoother experience with the newer releases.
+
+### Hardware requirements
+
+WSL2 requires virtualization support from your CPU, which virtually all modern processors have, but it needs to be enabled. Your system needs at least 4GB of RAM, though 8GB or more is strongly recommended for comfortable development work. When you run Claude Code alongside your code editor, browser, and other development tools, memory usage adds up quickly. You'll also need about 2-4GB of free disk space for the WSL2 installation and Claude Code itself, plus space for your project files.
+
+To check if virtualization is enabled on your system, open Task Manager (Ctrl + Shift + Esc), click on the Performance tab, select CPU on the left side, and look for "Virtualization: Enabled" on the right side. If it says "Disabled", you'll need to enable it in your computer's BIOS/UEFI settings - the exact steps vary by manufacturer, but typically involve pressing F2, F10, or Delete during startup and looking for options like "Intel VT-x", "AMD-V", or "Virtualization Technology".
+
+### Software component breakdown
+
+Let me explain each required software component and why it's necessary. First, WSL2 (Windows Subsystem for Linux 2) is Microsoft's technology for running Linux alongside Windows. The "2" is important - WSL2 uses real Linux kernel technology and is much faster than the original WSL. It's not installed by default on Windows 11, but Microsoft makes it easy to add.
+
+Node.js is a JavaScript runtime that lets you run JavaScript code outside of a web browser. Claude Code is built with JavaScript/TypeScript and distributed through npm (Node Package Manager), which comes bundled with Node.js. Think of Node.js as the engine that powers Claude Code, while npm is like the delivery service that installs it. You need Node.js version 18 or higher because Claude Code uses modern JavaScript features that weren't available in older versions. The LTS (Long Term Support) versions are recommended because they receive security updates for longer and are more stable.
+
+Ubuntu 20.04+ or Debian 10+ are Linux distributions - think of them as different "flavors" of Linux, like how Windows has Home and Pro editions. Ubuntu is recommended for beginners because it's user-friendly and has extensive documentation. The numbers (20.04, 10) refer to version numbers - you need these minimum versions because they include necessary system libraries and package managers that Claude Code depends on.
+
+### Terminal emulator choices
+
+While Windows 11 comes with Windows Terminal pre-installed (a modern, feature-rich terminal), you might already have other options like the traditional Command Prompt or PowerShell. For the best experience with Claude Code, Windows Terminal is highly recommended because it properly handles special characters, colors, and Unicode that Claude Code uses for its interface. It also makes it easy to have multiple tabs and switch between Windows and Linux environments.
+
+If you don't see Windows Terminal on your system, you can install it free from the Microsoft Store. Just open the Microsoft Store app, search for "Windows Terminal", and click Install. Other compatible alternatives include ConEmu, Hyper, or even the integrated terminals in VS Code or other development environments, though these might require additional configuration.
+
+### Optional but recommended: Git
+
+While Git isn't strictly required to run Claude Code, it's highly recommended if you're doing any software development. Git is a version control system that tracks changes to your code over time, and Claude Code has built-in features to help with Git workflows like creating commits, switching branches, and reviewing changes. If you plan to use these features, Git needs to be installed inside your WSL2 environment (not just on Windows).
+
+You can check if Git is already installed by opening a terminal and typing `git --version`. If it's not installed, don't worry - we'll cover how to install it during the setup process. Many developers already have Git installed on Windows, but remember that Claude Code runs in Linux, so it needs the Linux version of Git.
+
+### Checking your internet connection
+
+You'll need a stable internet connection during installation to download several components: WSL2 and Ubuntu (about 500MB), Node.js (about 30MB), Claude Code and its dependencies (about 50MB), and system updates (varies, but typically 100-200MB). The total download is usually under 1GB, but having a reliable connection prevents frustrating interruptions during setup.
+
+Additionally, Claude Code requires internet access during use to communicate with Anthropic's AI servers. While you can work on local files offline, the AI assistance features need an active connection. If you're behind a corporate firewall or proxy, you might need additional configuration - check with your IT department if you're in a corporate environment.
+
+### Preparing your mindset
+
+One final "prerequisite" worth mentioning is patience and a willingness to learn some Linux basics. If you've never used a command line or Linux before, some parts might feel unfamiliar at first. That's completely normal! The command line might seem intimidating compared to clicking buttons in a graphical interface, but it's actually quite logical once you understand the patterns. Think of it like learning to drive a manual transmission after only knowing automatic - there's a learning curve, but you gain much more control and understanding of what's happening under the hood.
+
+## Complete installation process
+
+The installation involves five distinct phases that must be completed in order. Think of this like building a house - you need the foundation (WSL2) before you can add the framework (Node.js) and finally the finishing touches (Claude Code itself).
+
+### Phase 1: Installing WSL2 (Windows Subsystem for Linux)
+
+To open PowerShell as Administrator on Windows 11, you have several options. The most straightforward method is to right-click the Start button (the Windows icon in your taskbar) and select "Windows Terminal (Admin)" or "PowerShell (Admin)" from the menu that appears. Alternatively, you can press the Windows key on your keyboard, type "powershell", and when you see "Windows PowerShell" appear in the search results, right-click it and select "Run as administrator". You can also use the keyboard shortcut Windows+X followed by pressing A. When prompted by User Account Control asking "Do you want to allow this app to make changes to your device?", click "Yes".
+
+Once PowerShell opens with administrator privileges, you'll see "Administrator: Windows PowerShell" in the title bar. The prompt will typically show something like `PS C:\Windows\system32>`. Now run the following command:
+
+``` powershell
+wsl --install
+```
+
+This command does several things automatically: it enables the required Windows features (Virtual Machine Platform and Windows Subsystem for Linux), downloads and installs the WSL2 kernel update, sets WSL2 as the default version, and installs Ubuntu as the default Linux distribution. The process will show progress bars and status messages. It typically takes 5-10 minutes depending on your internet speed.
+
+After the installation completes, you'll see a message saying "The requested operation is successful. Changes will not be effective until the system is rebooted." Restart your computer by clicking Start, then the power button, and selecting "Restart". This restart is crucial - WSL2 won't work properly without it.
+
+### Phase 2: Setting up your Linux environment
+
+After your computer restarts, you need to launch Ubuntu for the first time. You can do this in three ways: click the Start button and type "Ubuntu", then click on the Ubuntu app that appears; or open Windows Terminal and click the dropdown arrow next to the new tab button and select "Ubuntu"; or open any terminal and type `wsl`.
+
+The first time Ubuntu launches, it will take a minute or two to complete installation. You'll see messages like "Installing, this may take a few minutes..." followed by "Installation successful!" Then you'll be prompted to create a Unix username and password. This is an important step that many new users find confusing. The username you create here is for your Linux environment only - it doesn't need to match your Windows username. For example, if your Windows username is "JohnDoe", you could use "john" or "jdoe" or any other valid Linux username. Type your chosen username and press Enter.
+
+Next, you'll be prompted to enter a password. Here's a critical detail: when you type your password, nothing will appear on screen - no asterisks, no dots, nothing. This is a security feature in Linux terminals. Just type your password carefully and press Enter. You'll be asked to retype it to confirm. Choose a password you'll remember because you'll need it for administrative commands (sudo) later. Write it down somewhere safe if needed.
+
+### Phase 3: Updating and preparing the Linux system
+
+Now you're inside your Ubuntu environment. The prompt will look something like `username@computername:~$`. The `~` symbol represents your home directory. First, update the package manager to ensure you have access to the latest software. Run these commands one at a time:
+
+``` bash
+sudo apt update
+```
+
+When you run this first sudo command, it will ask for your password - the one you just created. Again, nothing will appear as you type. This command updates the list of available packages. You'll see many lines of output showing it connecting to Ubuntu's servers and downloading package information.
+
+``` bash
+sudo apt upgrade -y
+```
+
+This command upgrades all installed packages to their latest versions. The `-y` flag automatically answers "yes" to the confirmation prompt. This might take several minutes and show a lot of output. Don't worry if you see warnings about kernel updates being held back - this is normal in WSL.
+
+### Phase 4: Installing Node.js and npm
+
+Claude Code requires Node.js version 18 or higher. While you could install Node.js through Ubuntu's default repositories, they often contain older versions. Instead, we'll use NodeSource's repository to get the latest LTS version. First, download and run the setup script:
+
+``` bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+```
+
+This command does several things: `curl` downloads the setup script, `-fsSL` ensures it fails properly on errors and shows a progress bar, the pipe `|` sends the downloaded script to bash to execute it, and `sudo -E` runs it with administrator privileges while preserving environment variables. You'll see output showing it's adding the NodeSource signing key and repository.
+
+Now install Node.js:
+
+``` bash
+sudo apt install -y nodejs
+```
+
+This installs both Node.js and npm (Node Package Manager). The installation will show progress and complete in about a minute. Verify the installation worked:
+
+``` bash
+node --version
+```
+
+This should show something like `v20.11.0` or higher. Then check npm:
+
+``` bash
+npm --version
+```
+
+This should show version 10.x.x or higher.
+
+### Phase 5: Configuring npm for user installations
+
+By default, npm tries to install global packages in system directories, which requires sudo and can cause permission issues. We'll configure it to use a directory in your home folder instead. This is a best practice that prevents many common problems. First, create a directory for global npm packages:
+
+``` bash
+mkdir -p ~/.npm-global
+```
+
+The `-p` flag means "create parent directories as needed". The `~/.npm-global` is a hidden directory (the dot makes it hidden) in your home folder. Tell npm to use this directory:
+
+``` bash
+npm config set prefix ~/.npm-global
+```
+
+Now you need to add this directory to your PATH so your system can find the installed programs. The PATH is like a list of places your system looks for commands. Add it to your configuration file:
+
+``` bash
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+```
+
+This command appends (`>>`) a line to your `.bashrc` file, which runs every time you open a terminal. The line adds your npm global directory to the beginning of PATH. Apply the changes to your current session:
+
+``` bash
+source ~/.bashrc
+```
+
+This reloads your `.bashrc` file without needing to close and reopen the terminal. You can verify it worked by running:
+
+``` bash
+echo $PATH
+```
+
+You should see `/home/yourusername/.npm-global/bin` at the beginning of the output.
+
+## Installing Claude Code itself
+
+Now we arrive at the moment you've been preparing for - actually installing Claude Code. If the previous steps were like preparing a garden bed, this is where we plant the seed. The good news is that if you've followed the previous steps correctly, this part should be smooth and straightforward.
+
+### Understanding the npm installation process
+
+Before we run the installation command, let's understand what's about to happen. When you install a package globally with npm (that's what the `-g` flag means), npm downloads the package and all its dependencies from the npm registry, a massive online repository of JavaScript packages. It then places the executable files in your designated global bin directory (remember when we set that up?), making them available as commands you can run from anywhere in your terminal.
+
+Open your WSL Ubuntu terminal if it's not already open. You can verify you're in the right place by checking that your prompt shows your Linux username, not your Windows path. It should look something like `username@computername:~$`. If you see something like `/mnt/c/Users/...`, you're looking at your Windows file system through Linux, which is fine - you can run the installation from anywhere.
+
+### Running the installation command
+
+Now, type or copy this command exactly:
+
+``` bash
+npm install -g @anthropic-ai/claude-code
+```
+
+Let me break down what each part means. The `npm install` tells npm to download and install a package. The `-g` flag means "globally" - install this for use anywhere on the system, not just in a specific project. The `@anthropic-ai/claude-code` is the official package name - the `@anthropic-ai` part is Anthropic's namespace on npm (like a username), ensuring you're getting the authentic package, not someone else's project with a similar name.
+
+Here's a crucial point that trips up many Windows users: **do not use sudo with this command**. On traditional Linux systems, you might need sudo for global installations, but remember we configured npm to use your personal directory specifically to avoid this. If you use sudo here, it will install Claude Code in the wrong location and cause permission problems later. Just run the command as your regular user.
+
+When you press Enter, you'll see npm spring into action. The output will show several things happening. First, it contacts the npm registry and downloads the package metadata. Then it analyzes dependencies - Claude Code relies on other packages to work, and npm figures out exactly which versions it needs. You'll see a progress bar as it downloads each package. The output might look something like:
+
+```         
+⸨⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⠂⸩ ⠧ idealTree:@anthropic-ai/claude-code: timing idealTree:#root Completed in 1234ms
+```
+
+Don't worry if you see warnings about optional dependencies or deprecated packages - these are common and usually harmless. What matters is that the installation completes without errors. The whole process typically takes 30 seconds to 2 minutes depending on your internet speed.
+
+### Understanding what just got installed
+
+When the installation finishes, npm will show a summary of what it installed. You might see something indicating the installed version, like `+ @anthropic-ai/claude-code@1.0.38`. The plus sign means it was successfully added, and the number after the \@ symbol is the version. As of July 2025, version 1.0.38 is the latest, but you might see a newer version if updates have been released.
+
+What actually happened behind the scenes? npm created a new directory in `~/.npm-global/lib/node_modules/@anthropic-ai/claude-code/` containing all the Claude Code files. It also created a symbolic link (like a shortcut) in `~/.npm-global/bin/` that points to the main Claude Code executable. This is why you can now type `claude` from anywhere and the system knows what to run.
+
+### Verifying the installation
+
+Before we celebrate, let's make sure everything installed correctly. Type:
+
+``` bash
+claude --version
+```
+
+This should immediately print the version number, something like `1.0.38`. If you see this, congratulations - Claude Code is installed! If instead you see `command not found`, don't panic. This usually means the PATH we configured earlier isn't working properly. Try running `source ~/.bashrc` again to reload your configuration, then try the version command again.
+
+### First run and authentication
+
+Now for the exciting part - let's actually start Claude Code. Before running it, navigate to a directory where you have a coding project, or create a test directory:
+
+``` bash
+mkdir ~/test-claude-project
+cd ~/test-claude-project
+```
+
+The `mkdir` command creates a new directory, and `cd` changes into it. The `~` symbol is a shortcut for your Linux home directory. Now, simply type:
+
+``` bash
+claude
+```
+
+The first time you run Claude Code, it needs to connect to Anthropic's servers to verify your access. You'll see a welcome message and then be presented with authentication options. This is where Claude Code differs from many command-line tools - it's not just a local program but a connection to Anthropic's AI services.
+
+### Understanding authentication options
+
+Claude Code will present you with several authentication methods, and choosing the right one depends on how you want to use and pay for the service. Let me explain each option in detail.
+
+The **Anthropic Console** option is for developers who want pay-as-you-go API access. This is ideal if you're already using Anthropic's API for other projects or prefer to pay only for what you use. You'll need to create an account on console.anthropic.com, add a payment method, and generate an API key. The usage is billed per token (roughly per word) processed by the AI.
+
+The **Claude Pro/Max subscription** option is for users who have a monthly subscription to Claude through claude.ai. At \$20/month for Pro or \$30/month for Max, this gives you a certain amount of usage across all Claude interfaces, including Claude Code. This is often the most convenient option for individual developers who also use Claude for other tasks.
+
+The **Enterprise options** (AWS Bedrock or Google Vertex AI) are for organizations that have enterprise agreements with these cloud providers. If your company uses these services, you might be instructed to use one of these authentication methods with credentials provided by your IT department.
+
+### Completing the authentication process
+
+When you select an option (using arrow keys and Enter), Claude Code will open your default web browser. If you're in WSL and a browser doesn't open automatically, you'll see a URL that you can copy and paste into any browser. The URL will look something like `https://claude.ai/auth/code?...` with a long string of characters.
+
+In the browser, you'll log into your chosen service. If you don't have an account yet, you can create one at this point. For Anthropic Console, you'll need to set up billing. For Claude Pro/Max, you'll need an active subscription. After logging in and authorizing Claude Code, you'll see an authentication token - a long string of random-looking characters.
+
+Copy this entire token (Ctrl+C on Windows), return to your terminal, and paste it (right-click in most terminals, or Ctrl+Shift+V in Windows Terminal) when prompted. Press Enter, and Claude Code will verify the token and save it securely. You should see a success message confirming you're connected.
+
+### Troubleshooting authentication issues
+
+If authentication fails, the most common causes are copying the token incorrectly (missing characters at the beginning or end), an expired token (they're only valid for a few minutes), or network connectivity issues. Claude Code will usually give you a helpful error message pointing to the specific problem. You can always restart the authentication process by running `claude` again or using the `/auth reset` command once inside Claude Code.
+
+## Configuration and verification
+
+After successfully installing and authenticating Claude Code, you're like a pilot who's started the engine but hasn't taken off yet. This section will help you understand how to configure Claude Code for your specific needs and verify that everything is working properly. Think of this as your pre-flight checklist - making sure all systems are go before you start using Claude Code for real work.
+
+### Understanding Claude Code's configuration system
+
+Claude Code uses a layered configuration system, similar to how Git handles configurations. This might seem complex at first, but it's actually quite elegant once you understand the reasoning. There are three levels of settings, each serving a different purpose and taking precedence in a specific order.
+
+The global settings live in `~/.claude/settings.json` in your Linux home directory. These apply to all your projects and contain things like your preferred theme, default behaviors, and authentication tokens. To view this file, you can use the command `cat ~/.claude/settings.json` or open it in a text editor with `nano ~/.claude/settings.json`. Don't worry if the file doesn't exist yet - Claude Code creates it automatically when needed.
+
+Project-specific settings go in `.claude/settings.json` within each project directory. These override global settings for that particular project. For example, you might want Claude Code to be more cautious with changes in your production project but more experimental in your personal projects. When Claude Code starts, it looks for this file in the current directory and applies any settings it finds.
+
+Personal settings are stored in `.claude/settings.local.json` within project directories. This file is meant to be excluded from version control (added to .gitignore) so each developer on a team can have their own preferences without affecting others. This is perfect for settings like editor preferences or local file paths that vary between developers.
+
+### Configuring permissions and boundaries
+
+One of Claude Code's most important features is its permission system. Unlike giving a human developer access to your codebase, where trust and professional judgment apply, an AI assistant needs explicit boundaries. Let's explore how to set these up properly.
+
+Start Claude Code in your test project by running `claude` and then type the `/permissions` command. This shows you what Claude Code is currently allowed to do. By default, it has fairly conservative permissions - it can read files, suggest changes, and help with code, but it needs your approval for anything that modifies files or runs commands.
+
+To adjust permissions, use the `/permissions edit` command. This opens an interactive menu where you can toggle different capabilities. For example, you might see options like "Allow file creation", "Allow file modification", "Allow command execution", and "Allow git operations". Use arrow keys to navigate and Space to toggle each permission on or off.
+
+Let me explain what each permission type means in practice. "Allow file creation" lets Claude Code create new files when you ask it to scaffold a new component or add a configuration file. Without this, it can only show you what the file should contain, and you have to create it manually. "Allow file modification" is similar but for existing files - with it enabled, Claude Code can directly apply fixes or refactorings instead of just suggesting them.
+
+"Allow command execution" is more powerful and should be used thoughtfully. With this enabled, Claude Code can run build commands, tests, or scripts on your behalf. This is incredibly convenient but also means you're trusting Claude Code to run commands that could potentially affect your system. "Allow git operations" enables features like creating commits, switching branches, or pushing changes - useful for maintaining clean version control history.
+
+### Setting up terminal compatibility
+
+Claude Code uses various Unicode characters and ANSI color codes to create its interface. If you see strange characters or the display looks broken, you need to configure terminal compatibility. Type `/config` within Claude Code to access display settings.
+
+The configuration menu lets you choose between different display modes. If you're using Windows Terminal (recommended), select "Modern Terminal" for the best experience with full colors and special characters. If you're using an older terminal or accessing WSL through SSH, you might need to select "Compatible Mode" which uses simpler ASCII characters.
+
+You can also configure color themes here. Claude Code typically offers options like "Dark", "Light", "High Contrast", and "Solarized". Choose what's comfortable for your eyes - if you're not sure, start with "Dark" as it tends to be easier on the eyes during long coding sessions. The theme affects not just Claude Code's interface but also how it syntax-highlights code snippets.
+
+### Testing core functionality
+
+Now let's verify that Claude Code is working properly with a series of tests. Think of this as a shakedown cruise - we'll test each major system to ensure it's functioning correctly. First, let's test basic interaction. Type:
+
+```         
+explain what files are in this directory
+```
+
+Claude Code should respond by listing the files in your current directory (which might be empty if you're in the test directory we created) and explaining what it sees. This tests that Claude Code can read your file system properly through WSL.
+
+Next, let's test file creation. Ask Claude Code:
+
+```         
+create a simple hello world Python script
+```
+
+If you have file creation permissions enabled, Claude Code will create a new file called something like `hello_world.py` with a basic Python script. If permissions are disabled, it will show you the content but ask you to create the file manually. This tests the permission system and file creation capability.
+
+### Testing Windows file system integration
+
+One unique aspect of using Claude Code on Windows through WSL is accessing your Windows files. Let's verify this works correctly. Navigate to your Windows Documents folder:
+
+``` bash
+cd /mnt/c/Users/[YourWindowsUsername]/Documents
+```
+
+Replace `[YourWindowsUsername]` with your actual Windows username. Note that if your username has spaces, you need to escape them with backslashes or wrap the path in quotes, like `/mnt/c/Users/John\ Doe/Documents` or `"/mnt/c/Users/John Doe/Documents"`.
+
+Once there, run Claude Code again and ask:
+
+```         
+list all the files in this directory
+```
+
+Claude Code should successfully show your Windows Documents folder contents. This confirms that the WSL file system bridge is working properly. However, you might notice operations are slightly slower when working with Windows files compared to native Linux files - this is normal due to the file system translation layer.
+
+### Verifying Git integration
+
+If you plan to use Claude Code's Git features, let's test those too. First, check if Git is installed in your WSL environment:
+
+``` bash
+git --version
+```
+
+If Git isn't installed, install it with:
+
+``` bash
+sudo apt update
+sudo apt install git -y
+```
+
+Now create a test Git repository:
+
+``` bash
+cd ~/test-claude-project
+git init
+echo "# Test Project" > README.md
+git add README.md
+git commit -m "Initial commit"
+```
+
+Start Claude Code again and try:
+
+```         
+show me the git history
+```
+
+Claude Code should display your commit history. If you have Git operations permissions enabled, you can also ask it to create commits, switch branches, or perform other Git operations.
+
+### Customizing Claude Code's behavior
+
+Beyond permissions and display settings, Claude Code has various behavioral configurations you can adjust. Type `/settings` to see all available options. Some particularly useful ones include setting your preferred programming languages (so Claude Code can tailor its suggestions), configuring auto-save behavior, and adjusting the verbosity of Claude Code's responses.
+
+For example, if you primarily work with React and TypeScript, you might want to tell Claude Code this so it assumes these technologies when you ask general questions. Or if you find Claude Code's responses too verbose, you can adjust the detail level to be more concise.
+
+### Creating your first real interaction
+
+With everything configured and verified, let's do something more meaningful than hello world. If you have a real project, navigate to it. Otherwise, let's create a simple web project:
+
+``` bash
+mkdir ~/my-web-app
+cd ~/my-web-app
+claude
+```
+
+Now ask Claude Code to help you scaffold a project:
+
+```         
+create a simple HTML page with CSS styling and JavaScript interactivity
+```
+
+Watch as Claude Code creates multiple files, explains what each does, and shows how they work together. This demonstrates Claude Code's ability to work with multiple files and technologies simultaneously. You can follow up with questions like "explain how the JavaScript connects to the HTML" or "make the styling more modern" to see how Claude Code maintains context across the conversation.
+
+### Saving and backing up your configuration
+
+Once you have Claude Code configured to your liking, it's wise to back up your settings. Copy your global configuration file to a safe location:
+
+``` bash
+cp ~/.claude/settings.json ~/claude-backup-settings.json
+```
+
+If you're using version control for your dotfiles (a common developer practice), you might want to add the Claude configuration to your dotfiles repository. This makes it easy to restore your settings if you need to reinstall or set up Claude Code on another machine.
+
+## Common troubleshooting issues
+
+The most frequent installation error is **"Claude Code is not supported on Windows"**, which occurs when running npm from Windows CMD or PowerShell instead of WSL. Always ensure you're inside the WSL terminal (Ubuntu). If you encounter **"exec: node: not found"**, WSL is using the Windows Node.js installation instead of the Linux version - reinstall Node.js within WSL and verify that `which node` shows `/usr/bin/node`, not a `/mnt/c/...` path.
+
+Permission errors (EPERM) happen when npm tries to install in system directories. Never use `sudo npm install -g` - instead, configure the user-writable npm prefix as described above. For authentication failures, reset with `/auth reset` and reconfigure with `/auth login`. Path issues can be resolved by ensuring `export PATH=~/.npm-global/bin:$PATH` is in your `~/.bashrc` file.
+
+## Performance and best practices
+
+For optimal performance, work within the WSL file system (`/home/...`) rather than accessing Windows files through `/mnt/c/...` when possible. Claude Code may consume significant resources with large codebases, so use file-based workflows for extensive content rather than direct pasting. Start Claude from your project root directory, use descriptive prompts for complex tasks, and always review changes before approving them.
+
+Security best practices include never committing API keys to version control, using GitHub Secrets for CI/CD integration, configuring appropriate file access permissions, and regularly reviewing access controls. The tool stores API keys in an encrypted keychain equivalent and provides fine-grained permission controls for enterprise environments.
+
+## Tutorial: Creating Your First "Hello World" Project with Claude Code
+
+Now that Claude Code is installed and configured, let's walk through creating your first project together. This tutorial will demonstrate how Claude Code transforms natural language conversations into working code, using a classic "Hello World" program in either C# or VB.NET. Think of this as your first real conversation with your new AI programming partner, where we'll explore not just what Claude Code can do, but how to communicate with it effectively.
+
+### Setting up your project workspace
+
+First, let's create a dedicated directory for our Hello World project. Open your WSL terminal and navigate to a location where you want to create the project. I recommend staying within the Linux file system for better performance, rather than using the Windows file system through `/mnt/c/`. Type these commands:
+
+``` bash
+cd ~
+mkdir hello-world-dotnet
+cd hello-world-dotnet
+```
+
+These commands take you to your home directory, create a new folder called `hello-world-dotnet`, and then move into that folder. The reason we're creating a dedicated directory is that Claude Code works best when it has a clear project context. When you start Claude Code from within a project directory, it understands that everything you discuss relates to that specific project.
+
+Now, let's start Claude Code from within this directory:
+
+``` bash
+claude
+```
+
+You should see Claude Code's welcome message and a prompt waiting for your input. This is where the magic begins. Unlike traditional development where you'd immediately start typing code, with Claude Code you begin by having a conversation about what you want to create.
+
+### Having your first conversation with Claude Code
+
+Let's start with a simple request. Type the following and press Enter:
+
+```         
+I want to create a Hello World console application. Should I use C# or VB.NET?
+```
+
+Notice how we're not just commanding Claude Code to do something, but engaging it in a decision-making process. Claude Code will likely respond with a thoughtful comparison of both languages, explaining that C# is more widely used in modern .NET development with more learning resources available, while VB.NET might be more readable for beginners coming from certain backgrounds. This kind of dialogue helps you make informed decisions rather than arbitrary choices.
+
+Based on Claude Code's response, let's say you decide on C#. Now you can be more specific with your next request:
+
+```         
+Let's create a Hello World console application in C#. Please set up the project structure and explain what each file does.
+```
+
+Watch as Claude Code springs into action. If you have file creation permissions enabled, it will create several files. If not, it will show you the content to create manually. Either way, Claude Code will explain the purpose of each file it creates or suggests.
+
+### Understanding the project structure
+
+Claude Code will typically create a structure like this for a modern C# console application. Let me walk you through what it creates and why each piece matters. First, it will create a project file, usually named `HelloWorld.csproj`. This XML file is like a recipe that tells the .NET build system how to compile your program. Claude Code might create something like this:
+
+``` xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+</Project>
+```
+
+Claude Code will explain that `<OutputType>Exe</OutputType>` means we're building an executable program (as opposed to a library), and `<TargetFramework>net8.0</TargetFramework>` specifies we're using .NET 8.0, the latest long-term support version as of 2025. The nullable and implicit usings settings are modern C# features that make code safer and cleaner.
+
+Next, Claude Code will create the main program file, typically `Program.cs`:
+
+``` csharp
+// This is the entry point of our application
+Console.WriteLine("Hello, World!");
+
+// Let's make it interactive
+Console.WriteLine("What's your name?");
+string name = Console.ReadLine() ?? "Anonymous";
+Console.WriteLine($"Nice to meet you, {name}!");
+
+// Keep the console window open
+Console.WriteLine("\nPress any key to exit...");
+Console.ReadKey();
+```
+
+Notice how Claude Code doesn't just create the bare minimum "Hello World" but adds helpful enhancements like making it interactive and preventing the console window from closing immediately. These touches show how AI assistance goes beyond simple code generation to actually thinking about user experience.
+
+### Exploring Claude Code's explanatory powers
+
+One of Claude Code's greatest strengths is its ability to explain code in context. Try asking:
+
+```         
+Can you explain the ?? operator in the code you just created?
+```
+
+Claude Code will explain that the `??` is the null-coalescing operator, which provides a default value ("Anonymous") if `Console.ReadLine()` returns null. This kind of on-demand explanation helps you learn as you code. You can dig deeper by asking follow-up questions:
+
+```         
+When would ReadLine return null? Show me other ways to handle this.
+```
+
+This conversational approach to learning is what makes Claude Code special. Instead of searching through documentation or Stack Overflow, you're having a contextual discussion about your specific code.
+
+### Building and running the project
+
+Now let's see if our code actually works. First, we need to check if .NET is installed in WSL. Ask Claude Code:
+
+```         
+How do I check if .NET SDK is installed and run this project?
+```
+
+Claude Code will guide you through checking for .NET with `dotnet --version` and, if it's not installed, provide the commands to install it in WSL. This might involve commands like:
+
+``` bash
+# Install .NET SDK in WSL
+wget https://dot.net/v1/dotnet-install.sh
+chmod +x dotnet-install.sh
+./dotnet-install.sh --channel 8.0
+```
+
+Once .NET is installed, Claude Code will show you how to build and run your project:
+
+``` bash
+dotnet build
+dotnet run
+```
+
+When you run these commands, you'll see your Hello World program come to life, asking for your name and responding personally. This moment, where conversational instructions become running code, demonstrates the full cycle of AI-assisted development.
+
+### Iterating and improving
+
+The real power of Claude Code emerges when you want to modify or enhance your program. Try requests like:
+
+```         
+Add color to the console output to make it more visually appealing
+```
+
+Claude Code will modify your program to include colored text:
+
+``` csharp
+Console.ForegroundColor = ConsoleColor.Cyan;
+Console.WriteLine("Hello, World!");
+Console.ForegroundColor = ConsoleColor.Yellow;
+Console.WriteLine("What's your name?");
+Console.ResetColor();
+string name = Console.ReadLine() ?? "Anonymous";
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine($"Nice to meet you, {name}!");
+```
+
+Or try something more complex:
+
+```         
+Convert this to display the greeting in multiple languages based on user choice
+```
+
+Claude Code will refactor your simple program into something more sophisticated, perhaps adding a menu system and translations. This iterative development process feels more like pair programming with a knowledgeable colleague than traditional coding.
+
+### Learning through exploration
+
+Let's explore Claude Code's ability to teach through examples. Ask:
+
+```         
+Show me how to add error handling to this program
+```
+
+Claude Code might wrap the code in try-catch blocks and explain different exception types. But here's where it gets interesting - you can ask philosophical questions too:
+
+```         
+Is this level of error handling overkill for a Hello World program? What's the right balance?
+```
+
+This kind of question engages Claude Code in discussions about software engineering principles, helping you develop judgment alongside technical skills.
+
+### Creating the VB.NET alternative
+
+If you're curious about VB.NET or want to see the difference, ask Claude Code:
+
+```         
+Create the same program in VB.NET and put it in a separate file so I can compare
+```
+
+Claude Code will create a file like `HelloWorld.vb`:
+
+``` vbnet
+Module Program
+    Sub Main()
+        ' This is the entry point of our application
+        Console.WriteLine("Hello, World!")
+        
+        ' Let's make it interactive
+        Console.WriteLine("What's your name?")
+        Dim name As String = If(Console.ReadLine(), "Anonymous")
+        Console.WriteLine($"Nice to meet you, {name}!")
+        
+        ' Keep the console window open
+        Console.WriteLine(vbCrLf & "Press any key to exit...")
+        Console.ReadKey()
+    End Sub
+End Module
+```
+
+You can then ask Claude Code to explain the differences between the C# and VB.NET versions, learning about syntax variations, language philosophies, and when you might choose one over the other.
+
+### Best practices for working with Claude Code
+
+Through this tutorial, you've learned several key principles for effective Claude Code usage. First, start with clear intentions but be open to dialogue - Claude Code often suggests improvements you hadn't considered. Second, use Claude Code's explanatory abilities to learn as you build - every coding session can be a learning opportunity. Third, iterate frequently with small requests rather than trying to describe a complete program upfront.
+
+Remember that Claude Code maintains context throughout your conversation, so you can reference "the function we just created" or "the error handling we discussed" without repeating yourself. This contextual awareness makes complex development tasks feel more like natural conversation.
+
+Finally, don't hesitate to ask meta-questions about programming itself. Questions like "Is this approach considered good practice?" or "What would a senior developer do differently?" help you grow beyond just getting code to work.
+
+### Wrapping up your session
+
+When you're done with your Hello World project, you can simply type `exit` or `/quit` to leave Claude Code. Your code remains in the directory, ready for further development. You might want to initialize a Git repository to track your changes:
+
+``` bash
+git init
+git add .
+git commit -m "Initial Hello World project with Claude Code assistance"
+```
+
+This tutorial has shown you how Claude Code transforms the development experience from solitary typing to collaborative conversation. You've created not just a Hello World program, but explored different languages, added features, discussed best practices, and learned new concepts along the way. This is the true power of AI-assisted development - it's not just about generating code faster, but about learning and improving as you build.
+
+## Conclusion
+
+While Claude Code requires the additional step of setting up WSL2 on Windows 11, the installation process is straightforward once you understand the Linux environment requirement. The tool provides powerful AI-assisted development capabilities that integrate seamlessly with your existing workflow, offering natural language commands for code editing, debugging, and project understanding. Following this guide ensures a smooth installation experience and helps avoid the common pitfalls Windows users encounter when setting up terminal-based development tools.
